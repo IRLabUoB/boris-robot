@@ -44,10 +44,10 @@ controller_list:
       - left_arm_4_joint
       - left_arm_5_joint
       - left_arm_6_joint
-  - name: fake_faull_robot_controller
-    joints:a
-      - head_necak_pitch_joint
-      - head_necak_roll_joint
+  - name: fake_full_robot_controller
+    joints:
+      - head_neck_pitch_joint
+      - head_neck_roll_joint
       - head_neck_yaw_joint
       - head_head_tilt_joint
       - head_eyes_tilt_joint
