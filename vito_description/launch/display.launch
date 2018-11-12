@@ -166,8 +166,8 @@
             <rosparam command="load" file="$(find vito_description)/config/right_arm_names.yaml" />
 
             <include file="$(find lwr_hw)/launch/lwr_hw.launch">
-                <arg name="port" value="49939"/>
-                <arg name="ip" value="192.168.0.10"/>
+                <arg name="port" value="49938"/>
+                <arg name="ip" value="192.168.0.20"/>
                 <arg name="name" value="right_arm"/>
             </include>
         </group>
