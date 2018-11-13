@@ -134,6 +134,19 @@
         <joint name="left_hand_synergy_joint" value="1.0" />
         
     </group_state>
+    <group_state name="right_hand_closed" group="right_hand">
+        <joint name="right_hand_synergy_joint" value="1.0" />
+    </group_state>
+    <group_state name="right_hand_opened" group="right_hand">
+        <joint name="right_hand_synergy_joint" value="0.0" />
+    </group_state>
+    <group_state name="left_hand_closed" group="left_hand">
+        <joint name="left_hand_synergy_joint" value="1.0" />
+    </group_state>
+    <group_state name="left_hand_opened" group="left_hand">
+        <joint name="left_hand_synergy_joint" value="0.0" />
+    </group_state>
+    
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="right_hand" parent_link="right_hand_palm_link" group="right_hand_arm" />
     <end_effector name="left_hand" parent_link="left_hand_palm_link" group="left_hand_arm" />
@@ -207,6 +220,14 @@
     <passive_joint name="right_hand_thumb_outer_joint" />
     <passive_joint name="right_hand_thumb_outer_joint_mimic" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_1_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_2_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_3_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_4_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_5_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_6_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_7_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_hand_clamp" reason="Never" />
     <disable_collisions link1="head_asus_link" link2="head_head_1_link" reason="Never" />
     <disable_collisions link1="head_asus_link" link2="head_head_2_link" reason="Never" />
     <disable_collisions link1="head_asus_link" link2="head_head_3_link" reason="Never" />

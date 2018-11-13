@@ -96,7 +96,7 @@
             <arg name="fake_execution" value="false"/>
             <arg name="info" value="true"/>
             <arg name="debug" value="false"/>
-        </include>left_hand_enabled
+        </include>
     </group>
 
     <!-- #### components -->

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="depth_sensor" params="parent name *origin">
+       
+    <joint name="${name}_asus_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${name}_asus_link"/>
+    </joint>
+
+    <link name="${name}_asus_link">
+      <inertial>
+        <xacro:insert_block name="negligible_inertia"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://vito_description/meshes/asus_xtion_body.stl"/>
+        </geometry>
+        <material name="Vito/Black"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${M_PI/2} 0 0"/>
+        <geometry>
+          <cylinder radius="0.03" length="0.20"/>
+        </geometry>
+      </collision>
+    </link>
+
+    </xacro:macro>
+</robot>
+
+
+

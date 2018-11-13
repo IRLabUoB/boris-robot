@@ -6,6 +6,7 @@
   <xacro:include filename="$(find vito_description)/model/torso.urdf.xacro"/>
   <xacro:include filename="$(find vito_description)/model/table.urdf.xacro"/>
   <xacro:include filename="$(find vito_description)/model/materials.urdf"/>
+  <xacro:include filename="$(find vito_description)/robot/depth_sensor.urdf.xacro"/>
   <xacro:include filename="$(find lwr_description)/model/kuka_lwr.urdf.xacro"/>
   <xacro:include filename="$(find soft_hand_description)/model/soft_hand.urdf.xacro"/>
   <xacro:include filename="$(find kit_head_description)/model/kit_head.urdf.xacro"/>
@@ -42,6 +43,11 @@
   <xacro:kuka_lwr name="left_arm" parent="vito_anchor">
 		<origin xyz="0 0.12853 0.20722" rpy="0 ${-75 * M_PI / 180} ${-90 * M_PI / 180}"/>
   </xacro:kuka_lwr>
+
+  <!-- LEFT DEPTH SENSOR -->
+  <xacro:depth_sensor name="left_depth_sensor" parent="left_arm_7_link">
+		<origin xyz="0 0.15 0.10" rpy="0 0 0"/>
+  </xacro:depth_sensor>
 
   <!-- LEFT SOFTHAND -->
   <xacro:soft_hand parent="left_arm_7_link" name="left_hand" left="true" withAdaptiveTransmission="true" useMimicTag="$(arg use_mimic_tag)">
