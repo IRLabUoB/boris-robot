@@ -5,6 +5,7 @@
   <!-- MODELS -->
   <xacro:include filename="$(find vito_description)/model/torso.urdf.xacro"/>
   <xacro:include filename="$(find vito_description)/model/table.urdf.xacro"/>
+  <xacro:include filename="$(find vito_description)/model/wall.urdf.xacro"/>
   <xacro:include filename="$(find vito_description)/model/materials.urdf"/>
   <xacro:include filename="$(find vito_description)/robot/depth_sensor.urdf.xacro"/>
   <xacro:include filename="$(find lwr_description)/model/kuka_lwr.urdf.xacro"/>
@@ -33,7 +34,15 @@
                     plate_thickness="0.05">
   <origin xyz="0.1 0.885 -0.285" rpy="0 0 0"/>
   </xacro:model_table>
-
+  <!-- WALL -->
+  <xacro:model_wall name="wall" 
+                    parent="vito_anchor"
+                    wall_x="0.5"
+                    wall_y="2.0"
+                    wall_z="2.0">
+    <origin xyz="-0.80 0 0" rpy="0 0 0"/>
+    <!-- <origin xyz="0.495 0.55 0" rpy="0 0 0"/> -->
+  </xacro:model_wall>
   <!-- TORSO -->
   <xacro:model_torso name="torso" parent="vito_anchor">
     <origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>

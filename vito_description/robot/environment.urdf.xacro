@@ -4,6 +4,7 @@
        
   <!-- MODELS -->
   <xacro:include filename="$(find vito_description)/model/table.urdf.xacro"/>
+  <xacro:include filename="$(find vito_description)/model/wall.urdf.xacro"/>
   <xacro:include filename="$(find vito_description)/model/materials.urdf"/>
 
   <!-- WORKBENCH -->
