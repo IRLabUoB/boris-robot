@@ -55,7 +55,12 @@
 
   <!-- LEFT DEPTH SENSOR -->
   <xacro:depth_sensor name="left_depth_sensor" parent="left_arm_7_link">
-		<origin xyz="0 0.15 0.10" rpy="0 0 0"/>
+		<origin xyz="0 0.30 0.10" rpy="0 0 0"/>
+  </xacro:depth_sensor>
+
+  <!-- EXTERNAL DEPTH SENSOR -->
+  <xacro:depth_sensor name="external_depth_sensor" parent="vito_anchor">
+		<origin xyz="0.2 0.885 -0.0" rpy="0 ${30 * M_PI / 180} ${-90 * M_PI / 180}"/>
   </xacro:depth_sensor>
 
   <!-- LEFT SOFTHAND -->
