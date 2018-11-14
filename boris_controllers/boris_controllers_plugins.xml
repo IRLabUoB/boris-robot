@@ -1,0 +1,16 @@
+<library path="lib/libboris_controllers">
+  
+  <class name="boris_controllers/CartesianImpedanceBorisController" type="boris_controllers::CartesianImpedanceBorisController" base_class_type="controller_interface::ControllerBase">
+    <description>
+      The CartesianImpedanceBorisController tracks effort commands (as in JointImpedanceController from KUKA_LWR/LWR_CONTROLLERS). It expects a EffortJointInterface type of hardware interface.
+    </description>
+  </class>
+
+  <class name="boris_controllers/BorisBridgeController" type="boris_controllers::BorisBridgeController" base_class_type="controller_interface::ControllerBase">
+    <description>
+      The BorisBridgeController gets input on a ROS topic and uses the received torques as commands to the robot. The robot dynamics is compensated internally by the KUKA KCL software.
+    </description>
+  </class>
+
+
+</library>
