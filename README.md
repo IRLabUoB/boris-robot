@@ -2,22 +2,23 @@
 
 ![boris](media/boris_gazebo.png)
 
-The UNIPI robot is composed of two Kuka LWR equipped with two Pisa/IIT Soft Hands each. The arms are mounted on a torso that is fixed on a working table.
+The IRLab Boris robot is composed of two Kuka LWR equipped with two Pisa/IIT Soft Hands each. The arms are mounted on a torso that is fixed on a working table.
 
-This package use [ROS/kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu), [Gazebo7](http://gazebosim.org/tutorials?tut=install_ubuntu&ver=4.0&cat=install) on [Ubuntu 16.04](http://www.ubuntu.com/download/desktop).
+This package uses [ROS/kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu) with Gazebo7 on [Ubuntu 16.04](http://www.ubuntu.com/download/desktop).
 
 ## Dependancies to pisa-iit-soft-hand package
-Some launch files require the pisa-iit-soft-hand package to be installed. The repository can be cloned from [pisa-iit-soft-hand](https://github.com/CentroEPiaggio/pisa-iit-soft-hand.git).
+Some launch files require the pisa-iit-soft-hand package to be installed (branch: kinetic-devel). The repository can be cloned from [pisa-iit-soft-hand](https://github.com/eaa3/pisa-iit-soft-hand.git).
 
 ## Clonning with sub-modules
 
 Clone recursively:
 
-`git clone --recursive https://github.com/CentroEPiaggio/boris-robot.git`
+`git clone --recursive https://github.com/eaa3/boris-robot.git`
 
-- For simulation, you need [Gazebo7](http://gazebosim.org/tutorials?tut=install_ubuntu&ver=4.0&cat=install) or later to install `sudo apt-get install ros-kinetic-gazebo7-ros` and all ['ros-controls' framework](https://github.com/ros-controls) (from `synaptic`/`apt-get` is ok as well).
+- For simulation, you need Gazebo7, which is the stantard version of Gazebo for ROS Kinetic.
+- You will need to install ['ros-controls' framework](https://github.com/ros-controls) (from `synaptic`/`apt-get` is ok as well).
 
-- For the real scenario, you need to perform camera-robot calibration. We provide a [calibration](https://github.com/CentroEPiaggio/calibration.git) package that can help you to do that. However, other method that provides where the cameras (asus and two eyes of the KIT head) are w.r.t. the world is valid.
+- Calibration of attached cameras and hand-eye calibration: TODO
 
 ## Use
 
@@ -31,15 +32,11 @@ The command to launch the robot for real is:
 
 Please, check the available options and docs for arguments with: 
 
-`roslaunch --ros-args boris_descrtiption display.launch`
+`roslaunch --args boris_descrtiption display.launch`
 
 By default, the simulation is paused at the begining to wait for all controllers and stuff load, otherwise, the robots move around without control. When the command above stop sending messages on the screen, you need to call the following service in a different terminal:
 
 `rosservice call /gazebo/unpause_physics`
-
-By default, in the real scenarion, the [calibration](https://github.com/CentroEPiaggio/calibration.git) package is used as default, if you are using an external calibration, remember to disable it in the `display.launch` file, or just launch as:
-
-`roslaunch boris_description display.launch  use_calibration_package:=false`
 
 The configured groups in MoveIt! for this robot are:
 * `right_arm`: a serial kinematic chain from `world` to `right_arm_7_link`
@@ -59,10 +56,9 @@ For the real scenario, check instruction on each of the components on how to set
 IMPORTANT: We don't use the mounting plate on the KUKA arms, the small disc that can be attached to the 7th link before the true end-effector. This is important for calibration and mounting the hand to be consistent with the model.
 
 
-## Camera-robot calibration
+## Hand-eye calibration
 
-If you use [this calibration](https://github.com/CentroEPiaggio/calibration.git) package, we provide the robot model that contains the calibrator piece on the robot at `robot/boris_calib.urdf.xacro` that assit the calibration procedure. Just follow the instructions in the calibration package. Recall that you can use any external package for this as well.
-
+TODO
 
 ## Useful configured commands
 
