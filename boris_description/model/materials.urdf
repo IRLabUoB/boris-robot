@@ -17,7 +17,8 @@
   </material>
 
   <material name="Boris/Orange">
-    <color rgba="1.0 0.487 0 1.0"/>
+    <!-- <color rgba="1.0 0.487 0 1.0"/> -->
+    <color rgba="0.0 0.0 0.8 1.0"/>
   </material>
 
   <material name="Boris/Silver">

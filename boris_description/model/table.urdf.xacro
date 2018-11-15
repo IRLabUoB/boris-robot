@@ -11,7 +11,7 @@
 <xacro:property name="gr_to_Kg" value="0.001"/>
 
 <!-- not so negligible, otherwise simulation fails -->
-<xacro:property name="table_mass" value="${40000*gr_to_Kg}"/>
+<xacro:property name="table_mass" value="${500000*gr_to_Kg}"/>
 <xacro:property name="table_inertia">
     <origin xyz="0 0 0"/>
     <mass value="${table_mass}"/>
@@ -42,7 +42,7 @@
     </link>
 
     <gazebo reference="${name}_link">
-        <!-- <static>true</static> -->
+        <static>true</static>
     </gazebo>
 </xacro:macro>
 
@@ -84,7 +84,7 @@
     </xacro:table_leg>
 
     <gazebo reference="${name}_plate_link">
-        <!-- <static>true</static> -->
+        <static>true</static>
     </gazebo>
     
 </xacro:macro>
