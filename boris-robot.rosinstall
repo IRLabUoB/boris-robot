@@ -1,12 +1,12 @@
 - git:
     local-name: kit-head
-    uri: https://github.com/eaa3/kit-head.git
+    uri: https://github.com/IRLabUoB/kit-head.git
     version: kinetic-devel
 - git:
     local-name: kuka-lwr
-    uri: https://github.com/eaa3/kuka-lwr.git
+    uri: https://github.com/IRLabUoB/kuka-lwr.git
     version: kinetic-devel
 - git:
     local-name: pisa-iit-soft-hand
-    uri: https://github.com/eaa3/pisa-iit-soft-hand.git
+    uri: https://github.com/IRLabUoB/pisa-iit-soft-hand.git
     version: kinetic-devel
