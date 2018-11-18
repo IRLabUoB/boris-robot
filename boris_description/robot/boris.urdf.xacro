@@ -57,6 +57,7 @@
   <xacro:depth_sensor name="left_depth_sensor" parent="left_arm_7_link">
 		<origin xyz="0 0.30 0.10" rpy="0 0 0"/>
   </xacro:depth_sensor>
+  <!-- <pose_euler pitch="0.00301307" roll="3.10604" v1="0.429287" v2="0.327782" v3="-0.366929" yaw="0.829402"></pose_euler> -->
 
   <!-- EXTERNAL DEPTH SENSOR -->
   <xacro:depth_sensor name="external_depth_sensor" parent="world">

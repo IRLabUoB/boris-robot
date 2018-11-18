@@ -11,7 +11,7 @@
     <!-- configure whether the real hardware is enabled or not -->
     <arg name="head_enabled" default="false"/>
     <arg name="left_arm_enabled" default="true"/>
-    <arg name="left_hand_enabled" default="false"/>
+    <arg name="left_hand_enabled" default="true"/>
     <arg name="right_arm_enabled" default="true"/>
     <arg name="right_hand_enabled" default="false"/>
 
