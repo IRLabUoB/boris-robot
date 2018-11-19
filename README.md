@@ -8,9 +8,11 @@ This package uses [ROS/kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 
 ## Install dependencies
 
-`sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential`
-`sudo apt-get install ros-kinetic-ros-controllers`
-`sudo apt-get install ros-kinetic-moveit`
+* `sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential`
+
+* `sudo apt-get install ros-kinetic-ros-controllers`
+
+* `sudo apt-get install ros-kinetic-moveit`
 
 
 

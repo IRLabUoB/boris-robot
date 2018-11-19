@@ -149,7 +149,6 @@
 
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
-        <node name="controller_stopper" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="--stopped boris_bridge_controller"/>
 
         <!-- grasp estimator -->
         <group if="$(arg use_grasp_estimator)">
@@ -174,7 +173,7 @@
 
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
-        <node name="controller_stopper" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="--stopped cartesian_impedance_boris_controller boris_bridge_controller joint_impedance_controller"/>
+        <node name="controller_stopper" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="--stopped cartesian_impedance_boris_controller joint_impedance_controller"/>
     </group>
 
     <group ns="right_hand">
