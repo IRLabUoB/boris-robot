@@ -275,14 +275,10 @@
     <passive_joint name="right_hand_thumb_outer_joint" />
     <passive_joint name="right_hand_thumb_outer_joint_mimic" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_1_link" reason="Never" />
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_2_link" reason="Never" />
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_3_link" reason="Never" />
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_4_link" reason="Never" />
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_5_link" reason="Never" />
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_6_link" reason="Never" />
-    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_arm_7_link" reason="Never" />
     <disable_collisions link1="left_depth_sensor_asus_link" link2="left_hand_clamp" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_hand_softhand_base" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_hand_palm_link" reason="Never" />
+    <disable_collisions link1="left_depth_sensor_asus_link" link2="left_hand_kuka_coupler" reason="Never" />
     <disable_collisions link1="head_asus_link" link2="head_head_1_link" reason="Never" />
     <disable_collisions link1="head_asus_link" link2="head_head_2_link" reason="Never" />
     <disable_collisions link1="head_asus_link" link2="head_head_3_link" reason="Never" />
@@ -1905,4 +1901,8 @@
     <disable_collisions link1="right_hand_thumb_distal_link" link2="right_hand_thumb_proximal_link" reason="Adjacent" />
     <disable_collisions link1="right_hand_thumb_knuckle_link" link2="right_hand_thumb_proximal_link" reason="Adjacent" />
     <disable_collisions link1="table_plate_link" link2="torso_link" reason="Adjacent" />
+    <disable_collisions link1="right_depth_sensor_asus_link" link2="right_hand_kuka_coupler" reason="Never" />
+    <disable_collisions link1="right_depth_sensor_asus_link" link2="right_hand_clamp" reason="Never" />
+    <disable_collisions link1="right_depth_sensor_asus_link" link2="right_hand_softhand_base" reason="Never" />
+    <disable_collisions link1="right_depth_sensor_asus_link" link2="right_hand_palm_link" reason="Never" />
 </robot>
