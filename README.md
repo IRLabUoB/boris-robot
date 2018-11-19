@@ -36,6 +36,10 @@ Fetch required packages with wstool:
 
 * `wstool update`
 
+Install remaining dependencies using rosdep
+
+* `rosdep install --from-paths . --ignore-src --rosdistro $ROS_DISTRO`
+
 Build it
 
 * `cd $HOME/Projects/boris_ws`
