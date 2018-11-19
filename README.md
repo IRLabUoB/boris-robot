@@ -6,19 +6,36 @@ The IRLab Boris robot is composed of two Kuka LWR equipped with two Pisa/IIT Sof
 
 This package uses [ROS/kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu) with Gazebo7 on [Ubuntu 16.04](http://www.ubuntu.com/download/desktop).
 
-## Dependancies to pisa-iit-soft-hand package
-Some launch files require the pisa-iit-soft-hand package to be installed (branch: kinetic-devel). The repository can be cloned from [pisa-iit-soft-hand](https://github.com/eaa3/pisa-iit-soft-hand.git).
+## Install dependencies
 
-## Clonning with sub-modules
+`sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential`
+`sudo apt-get install ros-kinetic-ros-controllers`
+`sudo apt-get install ros-kinetic-moveit`
 
-Clone recursively:
 
-`git clone --recursive https://github.com/eaa3/boris-robot.git`
 
-- For simulation, you need Gazebo7, which is the stantard version of Gazebo for ROS Kinetic.
-- You will need to install ['ros-controls' framework](https://github.com/ros-controls) (from `synaptic`/`apt-get` is ok as well).
+## Installation on ROS Kinetic and Ubuntu 16.04
 
-- Calibration of attached cameras and hand-eye calibration: TODO
+Create a catkin workspace:
+
+`mkdir -p $HOME/Projects/boris_ws/src`
+
+Clone boris-robot repo inside `src` directory of your catkin workspace:
+
+`cd $HOME/Projects/boris_ws/src`
+`git clone https://github.com/eaa3/boris-robot.git`
+
+Fetch required packages with wstool:
+
+`wstool init`
+`wstool merge boris-robot/boris-robot.rosinstall`
+`wstool update`
+
+Build it
+
+`cd $HOME/Projects/boris_ws`
+`catkin_make`
+
 
 ## Use
 
