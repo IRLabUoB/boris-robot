@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Grid1
+        - /Grid1/Offset1
       Splitter Ratio: 0.5
     Tree Height: 463
   - Class: rviz/Selection
@@ -43,7 +45,7 @@ Visualization Manager:
       Offset:
         X: 0
         Y: 0
-        Z: 0
+        Z: -1
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
@@ -85,6 +87,22 @@ Visualization Manager:
           Show Trail: false
           Value: true
         head_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        head_camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        head_camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        head_camera_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        head_camera_rgb_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -403,6 +421,27 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        right_depth_sensor_asus_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_depth_sensor_camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_depth_sensor_camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_depth_sensor_camera_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_depth_sensor_camera_rgb_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         right_hand_clamp:
           Alpha: 1
           Show Axes: false
@@ -677,7 +716,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.55075002
+      Distance: 5.81987572
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -692,10 +731,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.310204089
+      Pitch: 0.165204138
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.253540695
+      Yaw: 0.128538221
     Saved: ~
 Window Geometry:
   Displays:

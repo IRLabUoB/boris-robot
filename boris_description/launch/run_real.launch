@@ -11,7 +11,7 @@
     <!-- configure whether the real hardware is enabled or not -->
     <arg name="head_enabled" default="false"/>
     <arg name="left_arm_enabled" default="true"/>
-    <arg name="left_hand_enabled" default="true"/>
+    <arg name="left_hand_enabled" default="false"/>
     <arg name="right_arm_enabled" default="true"/>
     <arg name="right_hand_enabled" default="false"/>
 
@@ -66,7 +66,7 @@
             <arg name="world_name" value="$(find boris_description)/worlds/simple_environment.world"/>
             <arg name="paused" value="false"/>
             <!-- when using the real/sim scenario in parallel, set "use_enabled_time" to false -->
-            <arg name="use_sim_time" value="true"/>
+            <arg name="use_sim_time" value="false"/>
             <arg name="gui" value="true"/>
             <arg name="headless" value="true"/>
             <arg name="debug" value="false"/>
