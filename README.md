@@ -18,23 +18,26 @@ This package uses [ROS/kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 
 Create a catkin workspace:
 
-`mkdir -p $HOME/Projects/boris_ws/src`
+* `mkdir -p $HOME/Projects/boris_ws/src`
 
 Clone boris-robot repo inside `src` directory of your catkin workspace:
 
-`cd $HOME/Projects/boris_ws/src`
-`git clone https://github.com/eaa3/boris-robot.git`
+* `cd $HOME/Projects/boris_ws/src`
+
+* `git clone https://github.com/eaa3/boris-robot.git`
 
 Fetch required packages with wstool:
 
-`wstool init`
-`wstool merge boris-robot/boris-robot.rosinstall`
-`wstool update`
+* `wstool init`
+
+* `wstool merge boris-robot/boris-robot.rosinstall`
+
+* `wstool update`
 
 Build it
 
-`cd $HOME/Projects/boris_ws`
-`catkin_make`
+* `cd $HOME/Projects/boris_ws`
+* `catkin_make`
 
 
 ## Use
