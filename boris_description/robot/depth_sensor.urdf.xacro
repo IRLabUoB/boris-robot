@@ -78,12 +78,12 @@
       <plugin name="${name}_camera_link_controller" filename="libgazebo_ros_openni_kinect.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0</updateRate>
-        <cameraName>camera</cameraName>
-        <imageTopicName>${name}/camera/rgb/image_raw</imageTopicName>
-        <cameraInfoTopicName>${name}/camera/rgb/camera_info</cameraInfoTopicName>
-        <depthImageTopicName>${name}/camera/depth/image_raw</depthImageTopicName>
-        <depthImageCameraInfoTopicName>${name}/camera/depth/camera_info</depthImageCameraInfoTopicName>
-        <pointCloudTopicName>${name}/camera/depth_registered/points</pointCloudTopicName>
+        <cameraName>${name}_camera</cameraName>
+        <imageTopicName>rgb/image_raw</imageTopicName>
+        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>depth/image_raw</depthImageTopicName>
+        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+        <pointCloudTopicName>depth_registered/points</pointCloudTopicName>
         <frameName>${name}_camera_depth_optical_frame</frameName>
         <pointCloudCutoff>0.05</pointCloudCutoff>
         <distortionK1>0.0000000</distortionK1>

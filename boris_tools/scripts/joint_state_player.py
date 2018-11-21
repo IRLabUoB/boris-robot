@@ -18,7 +18,7 @@ def main():
 
     arm = moveit_commander.MoveGroupCommander("left_arm")
 
-    waypoints = np.load('calib_traj.npy')
+    waypoints = np.load('calib_sim3.npy')
 
     rate = rospy.Rate(100)
     joint_angle_target = np.zeros(7)

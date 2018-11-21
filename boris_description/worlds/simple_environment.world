@@ -8,6 +8,26 @@
     <include>
       <uri>model://sun</uri>
     </include>
+
+    <!-- AR marker -->
+    <include>
+      <uri>model://marker26_14cm_margin_1cm</uri>
+      <pose>0.45 0.6 0.725 3.14159265359 0.0 0.0</pose>
+    </include>
+
+    <!-- Add a light on top of REEM and the marker -->
+    <!-- <light name="marker_light" type="point">
+      <cast_shadows>1</cast_shadows>
+      <pose>0.2 0 1.8 0 0 0</pose>
+      <diffuse>0.800000 0.800000 0.800000 1.000000</diffuse>
+      <specular>0.100000 0.100000 0.100000 1.000000</specular>
+      <attenuation>
+        <range>1000.000000</range>
+        <constant>0.900000</constant>
+        <linear>0.010000</linear>
+        <quadratic>0.001000</quadratic>
+      </attenuation>      
+    </light> -->
 	
     <physics type='ode'>
       <max_step_size>0.001</max_step_size>

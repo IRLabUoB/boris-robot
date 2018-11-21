@@ -18,6 +18,8 @@
     <!-- choose whether or not to start the full robot simulation -->
     <arg name="use_robot_sim" default="true"/>
 
+    
+
     <!-- LAUNCH IMPLEMENTATION -->
 
     <!-- #### -->
@@ -58,6 +60,8 @@
     <!-- #### simulation and planning -->
 
     <group if="$(arg use_robot_sim)">
+
+        <env name="GAZEBO_MODEL_PATH" value="$(find boris_description)/gmodels:$(optenv GAZEBO_MODEL_PATH)" />
         <!-- Spawn the full robot into Gazebo  -->
         <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg robot_name) -x 0 -y 0 -z 1.0 -R 0 -P 0 -Y 0" respawn="false" output="screen"/>
 

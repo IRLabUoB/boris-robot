@@ -1,0 +1,14 @@
+material Aruco/marker26_14cm_margin_1cm
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture marker26_14cm_margin_1cm.png
+			}
+		}
+	}
+}
+
