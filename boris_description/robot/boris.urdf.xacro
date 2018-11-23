@@ -82,7 +82,7 @@
 
   <!-- RIGHT DEPTH SENSOR -->
   <xacro:depth_sensor name="right" parent="right_arm_7_link">
-		<origin xyz="-0.0633612 -0.05191389 0.05191389" rpy="${M_PI-8.90385e-006} 0.0156339 ${M_PI-0.0116152}"/>
+		<origin xyz="-0.07053522  0.00938331  0.07951935" rpy="0.10361832 -0.0499392  -2.99893557"/>
   </xacro:depth_sensor>
   <!-- <pose_euler pitch="-0.0156339" roll="-8.90385e-006" v1="0.30172" v2="-0.247209" v3="-0.349544" yaw="0.0116152"></pose_euler> -->
 
