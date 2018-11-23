@@ -33,7 +33,7 @@ def rot2quat2(R):
 def find_best_calib():
     p_gd = [0.090, 0.048, 0.058]
     q_gd = [0.490, 0.510, 0.492, 0.508]
-    hand_transforms, camera_transforms = yml2transforms("TransformPairsInputTest01.yml", 25)
+    hand_transforms, camera_transforms = yml2transforms("TransformPairsInputTest02.yml", 26)
 
 
     best_error = None
@@ -77,13 +77,33 @@ def find_best_calib():
         
 
     print "Final error: ", best_error
-    eu = quaternion2euler(q)
-    print "PQ: \n", p
-    print q
+    eu = quaternion2euler(best_q)
+    print "PQ: \n", best_p
+    print best_q
     print eu
-    print "rosrun tf static_transform_publisher %f %f %f %f %f %f /left_arm_7_link /camera 10"%(p[0],p[1],p[2],eu[0],eu[1],eu[2])
+    print "rosrun tf static_transform_publisher %f %f %f %f %f %f /left_arm_7_link /camera 10"%(best_p[0],best_p[1],best_p[2],eu[0],eu[1],eu[2])
 
-find_best_calib()
+    return {'transform': best_transform, 'p': best_p, 'q': best_q, 'eu': eu}
+
+camera_base_p = [0.000, 0.022, 0.0]
+camera_base_q = [-0.500, 0.500, -0.500, 0.500]
+camera_base_transform = position_quaternion2matrix(camera_base_p, camera_base_q)
+
+out = find_best_calib()
+
+transform = np.matmul(out['transform'],np.linalg.inv(camera_base_transform))
+
+
+p = transform[:3,3]
+q = rot2quat2(transform)
+eu = quaternion2euler(q) 
+print "Final transform: "
+
+print p
+print eu
+
+print "rosrun tf static_transform_publisher %f %f %f %f %f %f /left_arm_7_link /camera 10"%(p[0],p[1],p[2],eu[0],eu[1],eu[2])
+
 
 
 

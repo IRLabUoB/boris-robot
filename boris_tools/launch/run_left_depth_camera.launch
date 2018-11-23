@@ -13,10 +13,10 @@
    <arg name="camera" value="$(arg camera)" />
    <arg name="rgb_frame_id" value="$(arg rgb_frame_id)" />
    <arg name="depth_frame_id" value="$(arg depth_frame_id)" />
-   <!-- <arg name="rgb_camera_info_url"
+   <arg name="rgb_camera_info_url"
         value="file://$(find boris_tools)/calib_data/left_rgb_PS1080_PrimeSense.yaml" />
    <arg name="depth_camera_info_url"
-        value="file://$(find boris_tools)/calib_data/left_depth_PS1080_PrimeSense.yaml" /> -->
+        value="file://$(find boris_tools)/calib_data/left_depth_PS1080_PrimeSense.yaml" />
  </include>
 
 </launch>

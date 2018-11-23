@@ -41,6 +41,37 @@ def main():
             joint_angle_target = waypoints[selected_idx]
             print("Selected joint goal %d: "%(selected_idx,), joint_angle_target)
 
+        elif c in ['a']:
+            current_joint_angles = arm.get_current_joint_values()
+            joint_angles = np.asarray(current_joint_angles)
+
+            waypoints = np.vstack([waypoints,joint_angles])
+            print("Added new waypoint. Number of waypoints %d."%(len(waypoints,)))
+            print("Joint angles: ", joint_angles)
+        
+        elif c in ['d']:
+
+            if len(waypoints) > 0:
+                waypoints = np.delete(waypoints, (selected_idx), axis=0)
+                print("Deleted %dth waypoint. Number of waypoints %d."%(selected_idx+1,len(waypoints,)))
+            else:
+                print("Waypoint list is empty.")
+
+        elif c in ['e']:
+
+            current_joint_angles = np.asarray(arm.get_current_joint_values())
+            
+            before = np.array(waypoints[selected_idx])
+            waypoints[selected_idx] = current_joint_angles
+            print("Editting joint angles %d: "%(selected_idx,), before)
+            print("Set to", current_joint_angles)
+
+        elif c in ['s']:
+            print("Saving current waypoint list.")
+            filename = raw_input("Filename:")
+            np.save('%s.npy'%(filename,), waypoints)
+            print("Saved.")
+
         elif c in ['g']:
 
             try:
