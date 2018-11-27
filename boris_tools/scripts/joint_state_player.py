@@ -16,9 +16,9 @@ def main():
     robot = moveit_commander.RobotCommander()
     scene = moveit_commander.PlanningSceneInterface()
 
-    arm = moveit_commander.MoveGroupCommander("left_arm")
+    arm = moveit_commander.MoveGroupCommander("right_arm")
 
-    waypoints = np.load('calib_sim3.npy')
+    waypoints = np.load('calib_real_right03.npy') #calib_sim3.npy #calib_real_right03.npy
 
     rate = rospy.Rate(100)
     joint_angle_target = np.zeros(7)
@@ -77,7 +77,7 @@ def main():
             try:
                 arm.set_joint_value_target(joint_angle_target)
                 arm.set_max_velocity_scaling_factor(0.35)
-                arm.set_max_acceleration_scaling_factor(0.4)
+                arm.set_max_acceleration_scaling_factor(0.35)
                 arm.go()
             except:
                 print("Not possible to go to waypoint. Try another one")

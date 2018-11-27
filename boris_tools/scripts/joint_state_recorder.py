@@ -50,7 +50,7 @@ def main():
     rospy.init_node("joint_state_recorder_node")
     print("Getting robot state... ")
 
-    joint_state_sub  = rospy.Subscriber("/left_arm/joint_states", JointState, joint_state_callback)
+    joint_state_sub  = rospy.Subscriber("/right_arm/joint_states", JointState, joint_state_callback)
 
     rate = rospy.Rate(10)
 
