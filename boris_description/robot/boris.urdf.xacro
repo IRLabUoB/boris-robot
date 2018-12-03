@@ -82,7 +82,8 @@
 
   <!-- HEAD -->
   <xacro:kit_head name="head" parent="world">
-    <origin xyz="0.0 0.0 0.61" rpy="0.0 0.0 0.0"/> <!-- 0.58 -->
+    <origin xyz="0.0 0.0 0.61" rpy="0.0 0.0 0.0"/> 
   </xacro:kit_head>
+  <!-- 0.58 -->
 
 </robot>
