@@ -37,7 +37,7 @@
         <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
             <param name="use_gui" value="$(arg gui)"/>
             <!-- listens to each part -->
-            <rosparam param="source_list">[/left_arm/joint_states,/left_hand/joint_states,/right_arm/joint_states,/right_hand/joint_states]</rosparam>
+            <rosparam param="source_list">[/left_arm/joint_states,/left_hand/joint_states,/right_arm/joint_states,/right_hand/joint_states,/head/joint_states]</rosparam>
         </node>
     </group>
 
@@ -51,6 +51,14 @@
     <!-- load hardware interface and controller configurations -->
     <rosparam command="load" file="$(find boris_description)/config/boris_controllers.yaml"/>
     <rosparam command="load" file="$(find boris_description)/config/hardware_interfaces.yaml"/>
+    <!-- Load gazebo controller configurations -->
+  	<!-- Note: You MUST load these PID parameters for all joints that are using
+       the PositionJointInterface, otherwise the arm + gripper will act like a
+       giant parachute, counteracting gravity, and causing some of the wheels
+       to lose contact with the ground, so the robot won't be able to properly
+       navigate. See
+       https://github.com/ros-simulation/gazebo_ros_pkgs/issues/612 -->
+    <rosparam file="$(find boris_description)/config/gazebo_controllers.yaml" command="load" />
 
     <!-- publish the environment in moveit -->
     <!-- (useful for kinematic planning, not fully completed)-->
@@ -107,18 +115,27 @@
 
     <!-- controllers are launched always, since either real or simulated hardware will be present -->
 
-    <group if="$(arg head_enabled)">
-        <!--add a copy of the robot description within the name space -->
-        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
-        <!-- <include file="$(find kit_head_hw)/launch/head_hw.launch">
-        </include>
-        -->
-        <!-- openni launch inclusion -->
+    
+
+    
+    <group ns="head">
+
+        <group if="$(arg head_enabled)">
+            <!--add a copy of the robot description within the name space -->
+            <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
+            <!-- <include file="$(find kit_head_hw)/launch/head_hw.launch">
+            </include>
+            -->
+            <!-- openni launch inclusion -->
+        </group>
+
+        <!-- load the controllers in current namespace -->
+         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
+
+         
     </group>
 
-    <!-- load the controllers in current namespace -->
-    <!-- <node ns="head" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
- -->
+
     <group ns="left_arm">
         <group if="$(arg left_arm_enabled)">
             <!--add a copy of the robot description within the name space -->
@@ -154,11 +171,6 @@
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
 
-        <!-- grasp estimator -->
-        <group if="$(arg use_grasp_estimator)">
-            <rosparam command="load" file="$(find grasp_state_publisher)/config/softgrasp.yaml" />
-            <node name="grasp_state_publisher" pkg="grasp_state_publisher" type="grasp_state_publisher" respawn="false" output="screen" />
-        </group>
     </group>
 
     <group ns="right_arm">
@@ -196,11 +208,6 @@
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
 
-        <!-- grasp estimator -->
-        <group if="$(arg use_grasp_estimator)">
-            <rosparam command="load" file="$(find grasp_state_publisher)/config/softgrasp.yaml" />
-            <node name="grasp_state_publisher" pkg="grasp_state_publisher" type="grasp_state_publisher" respawn="false" output="screen" />
-        </group>
     </group>
 
 </launch>
