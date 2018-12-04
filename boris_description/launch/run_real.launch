@@ -103,18 +103,22 @@
 
     <!-- controllers are launched always, since either real or simulated hardware will be present -->
 
-    <group if="$(arg head_enabled)">
-        <!--add a copy of the robot description within the name space -->
-        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
-        <!-- <include file="$(find kit_head_hw)/launch/head_hw.launch">
-        </include>
-        -->
-        <!-- openni launch inclusion -->
-    </group>
+    <group ns="head">
 
-    <!-- load the controllers in current namespace -->
-    <!-- <node ns="head" name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
- -->
+        <group if="$(arg head_enabled)">
+            <!--add a copy of the robot description within the name space -->
+            <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
+            <!-- <include file="$(find kit_head_hw)/launch/head_hw.launch">
+            </include>
+            -->
+            <!-- openni launch inclusion -->
+        </group>
+
+        <!-- load the controllers in current namespace -->
+         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
+         
+    </group>
+    
     <group ns="left_arm">
         <group if="$(arg left_arm_enabled)">
             <!--add a copy of the robot description within the name space -->
