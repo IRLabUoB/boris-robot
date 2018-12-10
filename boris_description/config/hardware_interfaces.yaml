@@ -13,6 +13,10 @@ left_arm:
   - left_arm_5_joint
   - left_arm_6_joint
 
+left_hand:
+  joints:
+  - left_hand_synergy_joint
+
 # make the namespace match the name you use to instantiate the arm in the xacro
 right_arm:
   root: right_arm_base_link
@@ -28,10 +32,14 @@ right_arm:
   - right_arm_5_joint
   - right_arm_6_joint
 
+right_hand:
+  joints:
+    - right_hand_synergy_joint
+
 # make the namespace match the name you use to instantiate the arm in the xacro
 head:
-  root: head_base_link
-  tip: head_right_eye_link
+  # root: head_base_link
+  # tip: head_right_eye_link
   # joints is not used, since with the robot name and urdf name conventions, the parsing is hardcoded
   # but as a general solution, joint names could be loaded as well, like controllers do
   joints: 
@@ -42,3 +50,4 @@ head:
   - head_eyes_tilt_joint
   - head_left_eye_joint
   - head_right_eye_joint
+

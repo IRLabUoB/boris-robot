@@ -59,7 +59,8 @@
     <child link="${name}_camera_rgb_optical_frame"/>
   </joint>
 
-  <gazebo reference="${name}_camera_depth_frame">
+
+    <gazebo reference="${name}_camera_depth_frame">
     <sensor type="depth" name="${name}_camera_gazebo_sensor">
       <always_on>true</always_on>
       <update_rate>10.0</update_rate>
@@ -79,11 +80,11 @@
         <alwaysOn>true</alwaysOn>
         <updateRate>0</updateRate>
         <cameraName>${name}_camera</cameraName>
-        <imageTopicName>rgb/image_raw</imageTopicName>
-        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
-        <depthImageTopicName>depth/image_raw</depthImageTopicName>
-        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
-        <pointCloudTopicName>depth_registered/points</pointCloudTopicName>
+        <imageTopicName>sim/rgb/image_raw</imageTopicName>
+        <cameraInfoTopicName>sim/rgb/camera_info</cameraInfoTopicName>
+        <depthImageTopicName>sim/depth/image_raw</depthImageTopicName>
+        <depthImageCameraInfoTopicName>sim/depth/camera_info</depthImageCameraInfoTopicName>
+        <pointCloudTopicName>sim/depth_registered/points</pointCloudTopicName>
         <frameName>${name}_camera_depth_optical_frame</frameName>
         <pointCloudCutoff>0.05</pointCloudCutoff>
         <distortionK1>0.0000000</distortionK1>
@@ -97,8 +98,10 @@
         <focalLength>0</focalLength>
         <hackBaseline>0</hackBaseline>
       </plugin>
-    </sensor>
-    </gazebo>
+      </sensor>
+      </gazebo>
+  
+  
 
     </xacro:macro>
 </robot>
