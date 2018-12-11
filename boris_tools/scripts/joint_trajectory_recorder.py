@@ -64,7 +64,7 @@ def main():
     rate = rospy.Rate(20)
     
     # print traj.result()
-    recorder = JointRecorder('spatula_trajectory.csv',30.0, robot)
+    recorder = JointRecorder('saucepan_trajectory04.csv',30.0, robot)
 
     rospy.on_shutdown(recorder.stop)
     print("Recording. Press Ctrl-C to stop.")

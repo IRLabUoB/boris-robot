@@ -71,9 +71,12 @@ def make_trajectory_hand(waypoints, joint_names):
         for cmd in wpt[8:9]:
             # max_vel = self._robot_joint_limits[name]['max_velocity']
             # dur.append(max(abs(cmd - pos) / max_vel, self._min_traj_dur))
+            # if cmd >= 0.85:
+            #     cmd = 0.95
             point.positions.append(cmd)
+            print cmd
         
-        print wpt[0]*1.1, "->", wpt[1:8]
+        # print wpt[0]*1.1, "->", wpt[1:8]
         point.time_from_start = rospy.Duration(wpt[0])
 
         traj.points.append(point)
@@ -94,7 +97,7 @@ def main():
     # trajectory = [-2.02830171585, 1.04696202278, 1.55436050892, -1.44723391533, -0.815707325935, 0.387918055058, -2.68925023079]
     joint_names = rospy.get_param("left_arm/joints")
     hand_joint_names = rospy.get_param("left_hand/joints")
-    trajectory, _ = parse_file('spatula_trajectory.csv')
+    trajectory, _ = parse_file('saucepan_trajectory03.csv')
 
     traj = make_trajectory(trajectory,joint_names)
     traj_hand = make_trajectory_hand(trajectory,hand_joint_names)
