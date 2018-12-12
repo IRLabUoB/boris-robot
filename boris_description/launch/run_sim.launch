@@ -1,6 +1,7 @@
 <launch>
     <!-- LAUNCH INTERFACE -->
     <arg name="gui" default="false" />
+    <arg name="gazebo_gui" default="true" />
     <arg name="robot_name" default="boris"/>
     <arg name="use_rviz" default="true"/>
     <arg name="use_joint_state_publisher" default="true"/>
@@ -80,7 +81,7 @@
             <arg name="paused" value="false"/>
             <!-- when using the real/sim scenario in parallel, set "use_enabled_time" to false -->
             <arg name="use_sim_time" value="true"/>
-            <arg name="gui" value="true"/>
+            <arg name="gui" value="$(arg gazebo_gui)"/>
             <arg name="headless" value="true"/>
             <arg name="debug" value="false"/>
         </include>
