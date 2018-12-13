@@ -41,15 +41,9 @@ if __name__ == '__main__':
     print("Initializing node... ")
     rospy.init_node('gazebo_model_spawner')
 
-    model_name_list = ['green_box', 'red_cylinder', 'green_cylinder', 'blue_box', 'red_box', 'blue_sphere']
+    model_name_list = ['object']
     delete_gazebo_models(model_name_list)
 
-    object_pose_zero = Pose(position=Point(x=0.5, y=0.6, z=0.725), orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
-    object_pose_one = Pose(position=Point(x=0.5, y=0.4, z=0.725), orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
-    object_pose_two = Pose(position=Point(x=0.5, y=0.2, z=0.725), orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
-    object_pose_three = Pose(position=Point(x=0.5, y=0.0, z=0.725), orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
-    object_pose_four = Pose(position=Point(x=0.5, y=-0.2, z=0.725), orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
-    object_pose_five = Pose(position=Point(x=0.5, y=-0.4, z=0.725), orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
-    object_poses = [object_pose_zero, object_pose_one, object_pose_two, object_pose_three, object_pose_four, object_pose_five]
-
-    for i in range(len(model_name_list)): load_gazebo_model(model_name_list[i], object_poses[i], model_type='urdf')
+    object_pose = Pose(position=Point(x=0.45, y=0.6, z=0.725),
+                      orientation=Quaternion(x=0.0, y=0.0, z=1.0, w=0.0))
+    load_gazebo_model(model_name_list[0], object_pose, model_type='urdf')

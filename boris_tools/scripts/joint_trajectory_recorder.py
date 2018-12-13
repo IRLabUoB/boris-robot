@@ -66,13 +66,13 @@ def main():
     # print traj.result()
     recorder = JointRecorder('saucepan_trajectory04.csv',30.0, robot)
 
-    rospy.on_shutdown(recorder.stop)
-    print("Recording. Press Ctrl-C to stop.")
-    recorder.record()
-    # while not rospy.is_shutdown():
-    #     # print("hand angle: %lf"%(robot.joint_angle('left_hand_synergy_joint')))
+    # rospy.on_shutdown(recorder.stop)
+    # print("Recording. Press Ctrl-C to stop.")
+    # recorder.record()
+    while not rospy.is_shutdown():
+        # print("hand angle: %lf"%(robot.joint_angle('left_hand_synergy_joint')))
         
-    #     rate.sleep()
+        rate.sleep()
 
 
 
