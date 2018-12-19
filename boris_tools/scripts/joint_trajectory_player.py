@@ -172,7 +172,7 @@ def main():
         t += 0.05
         # print len(wpt)
         # print wpt[0]
-        traj.add_point(wpt[1:8], wpt[0])
+        traj.add_point(wpt[1:8], wpt[0]*2.0)
         # print wpt[1:8], "->", wpt[0]
 
     rospy.on_shutdown(traj.stop)

@@ -97,7 +97,7 @@ def main():
     # trajectory = [-2.02830171585, 1.04696202278, 1.55436050892, -1.44723391533, -0.815707325935, 0.387918055058, -2.68925023079]
     joint_names = rospy.get_param("left_arm/joints")
     hand_joint_names = rospy.get_param("left_hand/joints")
-    trajectory, _ = parse_file('saucepan_trajectory03.csv')
+    trajectory, _ = parse_file('test_traj.csv')
 
     traj = make_trajectory(trajectory,joint_names)
     traj_hand = make_trajectory_hand(trajectory,hand_joint_names)
@@ -110,20 +110,22 @@ def main():
 
     arm = moveit_commander.MoveGroupCommander("left_arm")
 
-    try:
-        goal = trajectory[0][1:8]
-        arm.set_joint_value_target(goal)
-        arm.set_max_velocity_scaling_factor(0.35)
-        arm.set_max_acceleration_scaling_factor(0.35)
-        arm.go(wait=True)
-        arm.stop()
-    except:
-        print("Not possible to go to waypoint. Try another one")
+    def go_to_start():
+        try:
+            goal = trajectory[0][1:8]
+            arm.set_joint_value_target(goal)
+            arm.set_max_velocity_scaling_factor(0.35)
+            arm.set_max_acceleration_scaling_factor(0.35)
+            arm.go(wait=True)
+            arm.stop()
+        except:
+            print("Not possible to go to waypoint. Try another one")
 
     rate = rospy.Rate(30)
     while not rospy.is_shutdown():
         c = raw_input("send: ")
         if c == "y":
+            go_to_start()
             hand_cmd_pub.publish(traj_hand)
             cmd_pub.publish(traj)
         rate.sleep()

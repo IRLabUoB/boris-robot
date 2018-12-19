@@ -11,7 +11,7 @@
     <!-- configure whether the real hardware is enabled or not -->
     <arg name="head_enabled" default="false"/>
     <arg name="left_arm_enabled" default="true"/>
-    <arg name="left_hand_enabled" default="true"/>
+    <arg name="left_hand_enabled" default="false"/>
     <arg name="right_arm_enabled" default="false"/>
     <arg name="right_hand_enabled" default="false"/>
 
@@ -35,15 +35,17 @@
         <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
             <param name="use_gui" value="$(arg gui)"/>
             <!-- listens to each part -->
-            <rosparam param="rate">100</rosparam>
-               <rosparam param="source_list">[/left_arm/joint_states,/left_hand/joint_states,/right_arm/joint_states,/right_hand/joint_states,/head/joint_states]</rosparam>
+            <rosparam param="rate">200</rosparam>
+            <rosparam param="source_list">[/left_arm/joint_states,/left_hand/joint_states,/right_arm/joint_states,/right_hand/joint_states,/head/joint_states]</rosparam>
         </node>
     </group>
 
     <!-- <param name="/move_group/plan_execution/record_trajectory_state_frequency" type="double" value="900"/>
     <param name="publish_frequency" type="double" value="900"/> -->
+    <!-- <param name="publish_frequency" type="double" value="200"/> -->
+    <param name="publish_frequency" value="200"/>
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-        <rosparam param="publish_frequency">100</rosparam>
+        <!-- <rosparam param="publish_frequency">200</rosparam> -->
     </node>
 
     <group if="$(arg use_rviz)">
