@@ -1,7 +1,7 @@
 left_arm:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 100  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
@@ -30,7 +30,7 @@ left_arm:
 left_hand:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 100  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
@@ -39,7 +39,7 @@ left_hand:
 right_arm:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 100  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
@@ -79,7 +79,7 @@ right_arm:
 right_hand:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 100  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
@@ -88,7 +88,7 @@ right_hand:
 head:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 100  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
