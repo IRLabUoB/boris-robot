@@ -36,7 +36,7 @@ def on_touch(msg):
 
             # t = 0.0
             # traj.add_point([0.0], t)
-            t += 0.5    
+            t = 0.2    
             traj.add_point([hand_goal], t)
             traj.start()
             traj.wait()
@@ -55,7 +55,7 @@ def main():
     global traj
 
     print("Initialising node... ")
-    rospy.init_node("joint_trajectory_recorder_node")
+    rospy.init_node("touch_hand_control_node")
     traj = Trajectory()
     joint_state_sub  = rospy.Subscriber("/touchEvent", TouchEvent, on_touch, queue_size=1, tcp_nodelay=True)
 
