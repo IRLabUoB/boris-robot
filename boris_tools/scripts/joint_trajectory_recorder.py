@@ -7,9 +7,9 @@ from copy import copy
 import rospy
 
 
-from recorder import JointRecorder
+from boris_tools.recorder import JointRecorder
 import numpy as np
-from boris_robot import BorisRobot
+from boris_tools.boris_robot import BorisRobot
 
 
 
