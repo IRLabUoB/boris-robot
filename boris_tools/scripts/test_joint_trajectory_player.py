@@ -32,7 +32,7 @@ def main():
 
     trajectory, _ = parse_trajectory_file('cylinder_traj.csv')
 
-    traj_msg = make_ros_trajectory_msg(trajectory,boris.joint_names(), index_map=(1,8))
+    traj_msg = make_ros_trajectory_msg(trajectory,joint_names, index_map=(1,8))
     traj_hand_msg = make_ros_trajectory_msg(trajectory,hand_joint_names, index_map=(8,9))
 
 
@@ -41,7 +41,7 @@ def main():
     while not rospy.is_shutdown():
         c = raw_input("send: ")
         if c == "y":
-            boris.follow_trajectory("left_arm",traj_msg,first_waypoint_moveit=False)
+            boris.follow_trajectory("left_arm",traj_msg,first_waypoint_moveit=True)
             boris.follow_trajectory("left_hand",traj_hand_msg,first_waypoint_moveit=False)  
 
         if c == "h":
