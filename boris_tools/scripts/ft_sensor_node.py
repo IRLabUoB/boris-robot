@@ -25,7 +25,7 @@ def main():
     
     ft_sensor = NetFTSensor(ip=host_ip)
 
-    ft_publisher = rospy.Publisher(ft_topic, WrenchStamped, queue_size=1)
+    ft_publisher = rospy.Publisher(ft_topic, WrenchStamped, queue_size=0)
 
     # Polling from network
     while not rospy.is_shutdown():
