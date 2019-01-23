@@ -40,7 +40,7 @@
                     wall_x="0.5"
                     wall_y="2.0"
                     wall_z="2.0">
-    <origin xyz="-0.80 0 0" rpy="0 0 0"/>
+    <origin xyz="-0.40 0 0" rpy="0 0 0"/>
     <!-- <origin xyz="0.495 0.55 0" rpy="0 0 0"/> -->
   </xacro:model_wall>
   <!-- TORSO -->
@@ -60,8 +60,15 @@
 
 
   <!-- LEFT SOFTHAND -->
-  <xacro:soft_hand parent="left_arm_7_link" name="left_hand" left="false" withAdaptiveTransmission="false" useMimicTag="$(arg use_mimic_tag)">
-    <origin xyz="0 0 0.072" rpy="0 0 ${-135 * M_PI / 180}"/>
+
+  <link name="left_ft_sensor" />
+  <joint name="left_ft_sensor_joint" type="fixed" >
+    <origin rpy="0 0 ${45 * M_PI / 180}" xyz="0 0.0 0.0" />
+    <parent link="left_arm_7_link"/>
+    <child link="left_ft_sensor"/>
+  </joint>
+  <xacro:soft_hand parent="left_ft_sensor" name="left_hand" left="false" withAdaptiveTransmission="false" useMimicTag="$(arg use_mimic_tag)">
+    <origin xyz="0 0 0.072" rpy="0 0 ${-180 * M_PI / 180}"/>
   </xacro:soft_hand>
 
   <!-- RIGHT ARM -->

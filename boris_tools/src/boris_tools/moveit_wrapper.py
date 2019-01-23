@@ -44,7 +44,7 @@ class MoveitWrapper(object):
             
             # safe values
             self._move_groups[group_name].set_max_velocity_scaling_factor(0.25)
-            # self._move_groups[group_name].set_max_acceleration_scaling_factor(0.35)
+            self._move_groups[group_name].set_max_acceleration_scaling_factor(0.25)
 
 
         self._ready = True

@@ -22,4 +22,4 @@ class NetFTSensor(object):
         torque = values[3:6]
         stamp = values[6]
 
-        return force, torque, stamp
+        return np.array(force), np.array(torque), stamp
