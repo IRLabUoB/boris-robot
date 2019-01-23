@@ -10,3 +10,7 @@
     local-name: pisa-iit-soft-hand
     uri: https://github.com/IRLabUoB/pisa-iit-soft-hand.git
     version: kinetic-devel
+- git:
+    local-name: force_torque_tools
+    uri: https://github.com/eaa3/force_torque_tools.git
+    version: kinetic
