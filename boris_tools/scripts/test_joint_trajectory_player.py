@@ -29,8 +29,14 @@ def main():
     joint_names = rospy.get_param("left_arm/joints")
     hand_joint_names = rospy.get_param("left_hand/joints")
 
+    trajectories = ['suitcase_trajectory01.csv',
+                    'cylinder_traj.csv', 
+                    'cylinder_slide_trajectory.csv', 
+                    'test_traj.csv', 
+                    'box_traj.csv',
+                    'ibuprofen_trajectory.csv']
 
-    trajectory, _ = parse_trajectory_file('suitcase_trajectory01.csv')
+    trajectory, _ = parse_trajectory_file(trajectories[5])
 
     traj_msg = make_ros_trajectory_msg(trajectory,joint_names, index_map=(1,8))
     traj_hand_msg = make_ros_trajectory_msg(trajectory,hand_joint_names[:1], index_map=(8,9))

@@ -58,7 +58,7 @@ def main():
 
         gravity = get_mock_gravity(tf_buffer,frame_id)
 
-        print gravity
+        # print gravity
 
         imu_msg = Imu()
         imu_msg.linear_acceleration = Vector3(*gravity)

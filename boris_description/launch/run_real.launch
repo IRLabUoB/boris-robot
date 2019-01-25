@@ -13,7 +13,7 @@
     <arg name="head_enabled" default="false"/>
     <arg name="left_arm_enabled" default="true"/>
     <arg name="left_hand_enabled" default="true"/>
-    <arg name="right_arm_enabled" default="true"/>
+    <arg name="right_arm_enabled" default="false"/>
     <arg name="right_hand_enabled" default="false"/>
 
     <!-- choose whether or not to start the full robot simulation -->
@@ -157,6 +157,8 @@
                     <arg name="use_default_joint_names" value="false"/>
                     <arg name="hand_id" value="1"/>
                 </include>
+
+                <node name="data_glove" pkg="boris_tools" type="run_data_glove.bash" />
             </group>
             <!-- <group unless="$(arg use_sensorised_hand)">
                 <rosparam command="load" file="$(find boris_description)/config/left_hand_names.yaml" />
@@ -207,6 +209,8 @@
                     <arg name="use_default_joint_names" value="false"/>
                     <arg name="hand_id" value="2"/>
                 </include>
+
+                <node name="data_glove" pkg="boris_tools" type="run_data_glove.bash" />
             </group>
             <group unless="$(arg use_sensorised_hand)">
                 <rosparam command="load" file="$(find boris_description)/config/right_hand_names.yaml" />
