@@ -28,7 +28,7 @@ Clone boris-robot repo inside `src` directory of your catkin workspace:
 
 * `cd $HOME/Projects/boris_ws/src`
 
-* `git clone https://github.com/eaa3/boris-robot.git`
+* `git clone https://github.com/IRLabUoB/boris-robot.git`
 
 Fetch required packages with wstool:
 
