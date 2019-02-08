@@ -10,11 +10,7 @@ This package uses [ROS/kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu)
 
 * `sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential`
 
-* `sudo apt-get install ros-kinetic-ros-controllers`
-
-* `sudo apt-get install ros-kinetic-ros-control`
-
-* `sudo apt-get install ros-kinetic-moveit`
+* `sudo apt-get install ros-kinetic-ros-controllers ros-kinetic-ros-control ros-kinetic-gazebo-ros-control ros-kinetic-moveit`
 
 
 
@@ -28,7 +24,7 @@ Clone boris-robot repo inside `src` directory of your catkin workspace:
 
 * `cd $HOME/Projects/boris_ws/src`
 
-* `git clone https://github.com/eaa3/boris-robot.git`
+* `git clone https://github.com/IRLabUoB/boris-robot.git`
 
 Fetch required packages with wstool:
 
