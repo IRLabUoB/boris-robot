@@ -8,6 +8,8 @@ from tf import TransformListener
 
 from lwr_controllers.msg import CartesianImpedancePoint
 
+from boris_tools.controller_manager_interface import ControllerManagerInterface
+
 import sys
 
 NODE_NAME = 'boris_eye_calibrator'
@@ -32,6 +34,11 @@ class CartesianTrajectoryFollower(object):
     
         self._br = tf.TransformBroadcaster()
         self._tf = TransformListener()
+
+        self._cmi = ControllerManagerInterface(ns='left_arm/')
+
+        self._cmi.stop_controller('joint_trajectory_controller')
+        self._cmi.start_controller('cartesian_impedance_controller')
 
     def broadcast_frame(self, pt, rot, frame_name="marker"):
 
@@ -107,9 +114,9 @@ class CartesianTrajectoryFollower(object):
         cip.k_FRI.x = 300
         cip.k_FRI.y = 300
         cip.k_FRI.z = 300
-        cip.k_FRI.rx = 25
-        cip.k_FRI.ry = 25
-        cip.k_FRI.rz = 25
+        cip.k_FRI.rx = 30
+        cip.k_FRI.ry = 30
+        cip.k_FRI.rz = 30
 
         cip.d_FRI.x = 0.5
         cip.d_FRI.y = 0.5
@@ -119,7 +126,7 @@ class CartesianTrajectoryFollower(object):
         cip.d_FRI.rz = 0.5
 
         incr = 0.05
-        r_incr = 0.05
+        r_incr = 0.1
         
         if key=="w":
             cip.x_FRI.position.x += incr
@@ -135,27 +142,26 @@ class CartesianTrajectoryFollower(object):
             cip.x_FRI.position.z += incr
         
         
-
-        omega = Quaternion(*[0,0,0,1])
+        omega = list(tf.transformations.euler_from_quaternion([cip.x_FRI.orientation.x, cip.x_FRI.orientation.y, cip.x_FRI.orientation.z, cip.x_FRI.orientation.w]))
         if key=="u":
-            omega.x += r_incr
+            omega[0] += r_incr
         if key=="j":
-            omega.x -= r_incr
+            omega[0] -= r_incr
         if key=="h":
-            omega.y += r_incr
+            omega[1] += r_incr
         if key=="k":
-            omega.y -= r_incr
+            omega[1] -= r_incr
         if key=="y":
-            omega.z -= r_incr
+            omega[2] -= r_incr
         if key=="i":
-            omega.z += r_incr
+            omega[2] += r_incr
 
 
-        q_new = tf.transformations.quaternion_multiply([omega.x,omega.y, omega.z, omega.w], 
-                                                       [cip.x_FRI.orientation.x, cip.x_FRI.orientation.y, cip.x_FRI.orientation.z, cip.x_FRI.orientation.w])
+        q_new = tf.transformations.quaternion_from_euler(*omega)
         cip.x_FRI.orientation = Quaternion(*q_new)
         print "Look: ", cip.x_FRI.position, cip.x_FRI.orientation
         cip.f_FRI = Wrench(force=Vector3(*np.zeros(3)), torque=Vector3(*np.zeros(3)))
+        cip.header.frame_id = "left_arm_base_link"
         return cip
 
             
@@ -217,9 +223,6 @@ class CartesianTrajectoryFollower(object):
 
     
             rate.sleep()
-
-
-
 
 
 def main():

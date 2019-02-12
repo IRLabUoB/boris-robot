@@ -200,5 +200,4 @@ class BorisRobot(object):
 
             cmd_pub.publish(JointTrajectory())
 
-
-    
+    #def end_effector(self)
