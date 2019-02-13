@@ -160,6 +160,17 @@ class BorisRobot(object):
         return self._joint_names
 
 
+    def goto_with_moveit(self, limb_name, joint_values):
+
+
+        if self._has_moveit:
+
+            # Go to first waypoint
+            self._moveit_wrapper.set_joint_value_target(limb_name, joint_values)
+            plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
+            self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan)
+
+
     def follow_trajectory(self, limb_name, joint_trajectory_msg, first_waypoint_moveit=True):
         """
         Using topic interface for trajectory tracking
@@ -175,11 +186,31 @@ class BorisRobot(object):
             trajectory_point = joint_trajectory_msg.points[0]
 
             # Go to first waypoint
-            self._moveit_wrapper.set_joint_value_target(limb_name, trajectory_point.positions)
-            plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
-            self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan)
+            self.goto_with_moveit(limb_name, trajectory_point.positions)
+
 
         self.cmd_map_[limb_name].publish(joint_trajectory_msg)
+    
+    # def follow_cart_imp_trajectory(self, limb_name, joint_trajectory_msg, cartesian_trajectory, first_waypoint_moveit=True):
+    #     """
+    #     Using topic interface for trajectory tracking
+    #     Send joint trajectory message to be executed by the specified limb
+    #     @type limb_name: str
+    #     @param limb_name: name of the limb which should follow the trajectory 
+    #     options: ("left_arm", "right_arm", "left_hand", "right_hand")
+    #     @type first_waypoint_moveit: bool
+    #     @param first_waypoint_moveit: whether or not to use moveit to take the robot tot he first waypoint
+    #     """
+
+    #     if first_waypoint_moveit and self._has_moveit:
+    #         trajectory_point = joint_trajectory_msg.points[0]
+
+    #         # Go to first waypoint
+    #         self._moveit_wrapper.set_joint_value_target(limb_name, trajectory_point.positions)
+    #         plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
+    #         self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan)
+
+    #     self.cmd_map_[limb_name].publish(joint_trajectory_msg)
         
     def stop_trajectory(self, limb_name):
         """
@@ -190,7 +221,7 @@ class BorisRobot(object):
 
         # sending empty trajectory to stop all trajectories
         # see preemption policy: http://wiki.ros.org/joint_trajectory_controller
-        self._cmd_map[limb_name].publish(JointTrajectory())
+        self.cmd_map_[limb_name].publish(JointTrajectory())
 
     def stop_trajectories(self):
         """

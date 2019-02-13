@@ -1,0 +1,130 @@
+#!/usr/bin/env python
+
+import numpy as np
+import rospy
+from geometry_msgs.msg import Pose, Quaternion, Wrench, Point, Vector3
+
+from lwr_controllers.msg import CartesianImpedancePoint
+
+from boris_tools.controller_manager_interface import ControllerManagerInterface
+
+
+class CartesianImpedanceCommander(object):
+
+
+    def __init__(self, ns='left_arm/', base_link='left_arm_base_link'):
+
+        self._base_link = base_link
+        self._cartesian_command_pub = rospy.Publisher('left_arm/cartesian_impedance_controller/command', CartesianImpedancePoint, tcp_nodelay=False, queue_size=1)
+
+        self._cmi = ControllerManagerInterface(ns=ns)
+        self._cmi.load_controller('cartesian_impedance_controller')
+        self._cmi.load_controller('joint_impedance_controller')
+
+    def activate(self):
+
+        self._cmi.stop_controller('joint_trajectory_controller')
+        # rospy.sleep(3.0)
+        self._cmi.start_controller('cartesian_impedance_controller')
+        # rospy.sleep(3.0)
+
+    def stop(self):
+
+        self._cmi.stop_controller('cartesian_impedance_controller')
+        # rospy.sleep(3.0)
+        self._cmi.start_controller('joint_trajectory_controller')
+        # rospy.sleep(3.0)
+
+    def stop_special(self):
+
+        self._cmi.stop_controller('cartesian_impedance_controller')
+
+        # rospy.sleep(1.5)
+        self._cmi.start_controller('joint_impedance_controller')
+        # rospy.sleep(1.5)
+        self._cmi.stop_controller('joint_impedance_controller')
+        # rospy.sleep(1.5)
+        
+        self._cmi.start_controller('joint_trajectory_controller')
+
+        # rospy.sleep(1.5)
+
+    def compute_command(self, ee_goal):
+
+        return self.compute_command_cart_imp(ee_goal)
+
+    def compute_command_cart_imp(self, 
+                        ee_goal, # (position, quaternion)
+                        impedance=(300,300,300,30,30,30), 
+                        damping=(0.5,0.5,0.5,0.5,0.5,0.5),
+                        force=(0,0,0),
+                        torque=(0,0,0)):
+
+        cmd = CartesianImpedancePoint()
+
+        cmd.x_FRI = Pose(position=Point(*ee_goal[0]), orientation=Quaternion(*ee_goal[1]))
+
+        cmd.k_FRI.x = impedance[0]
+        cmd.k_FRI.y = impedance[1]
+        cmd.k_FRI.z = impedance[2]
+        cmd.k_FRI.rx = impedance[3]
+        cmd.k_FRI.ry = impedance[4]
+        cmd.k_FRI.rz = impedance[5]
+
+        cmd.d_FRI.x = damping[0]
+        cmd.d_FRI.y = damping[1]
+        cmd.d_FRI.z = damping[2]
+        cmd.d_FRI.rx = damping[3]
+        cmd.d_FRI.ry = damping[4]
+        cmd.d_FRI.rz = damping[5]
+
+        cmd.f_FRI = Wrench(force=Vector3(*force), torque=Vector3(*torque))
+
+        cmd.header.frame_id = self._base_link
+
+
+        return cmd
+
+
+    def send_command(self, cmd):
+
+        ## TODO: check command before sending for safety reasons
+
+        self._cartesian_command_pub.publish(cmd)
+
+    def get_current_pose(self):
+
+        from boris_tools.ros_tf_utils import TFManager
+
+        tfm = TFManager()
+
+        p, q, t = tfm.get_transform('left_arm_base_link','left_arm_7_link')
+
+        pose = (p,q)
+
+
+        return pose
+
+
+if __name__ == '__main__':
+    rospy.init_node("test_tf_manager")
+
+    cic = CartesianImpedanceCommander()
+
+    pose = cic.get_current_pose()
+
+    cic.activate()
+
+    cmd = cic.compute_command_cart_imp(pose)
+
+    p, q = pose
+    
+    p2 = (p[0]+0.03,p[1],p[2])
+
+    pose2 = (p2,q)
+
+    cmd2 = cic.compute_command_cart_imp(pose2)
+
+
+
+

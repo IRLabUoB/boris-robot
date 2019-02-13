@@ -1,5 +1,7 @@
 
 
+#!/usr/bin/env python
+
 import sys
 from copy import copy
 import rospy
@@ -36,7 +38,7 @@ def main():
                     'box_traj.csv',
                     'ibuprofen_trajectory.csv']
 
-    trajectory, _ = parse_trajectory_file(trajectories[5])
+    trajectory, _ = parse_trajectory_file("contact_trajectories/" + trajectories[1])
 
     traj_msg = make_ros_trajectory_msg(trajectory,joint_names, index_map=(1,8))
     traj_hand_msg = make_ros_trajectory_msg(trajectory,hand_joint_names[:1], index_map=(8,9))

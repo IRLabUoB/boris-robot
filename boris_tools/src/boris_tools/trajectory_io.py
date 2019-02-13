@@ -71,3 +71,31 @@ def trajectory_point2joint_state(joint_trajectory_point):
     joint_state.effort = copy.deepcopy(joint_trajectory_point.effort)
     
     return joint_state
+
+
+def make_cartesian_trajectory(waypoints, index_map=(1,-1), fk_func=None):
+
+    assert fk_func is not None
+
+    cartesian_trajectory = []
+    for wpt in waypoints:
+
+        cartesian_trajectory.append(fk_func(wpt[index_map[0]:index_map[1]]))
+
+    
+    return cartesian_trajectory
+
+
+# def make_cartesian_trajectory_poseMsgs(waypoints, index_map=(1,-1), fk_func=None):
+
+#     assert fk_func is not None
+
+#     cartesian_trajectory = []
+#     for wpt in waypoints:
+
+#         cartesian_trajectory.append(fk_func(wpt[index_map[0]:index_map[1]]))
+
+    
+#     return cartesian_trajectory
+
+

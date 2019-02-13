@@ -7,7 +7,7 @@
     <arg name="load_moveit" default="true"/>
     <arg name="use_calibration_package" default="false"/>
     <arg name="use_grasp_estimator" default="false"/>
-    <arg name="use_sensorised_hand" default="true"/>
+    <arg name="use_sensorised_hand" default="false"/>
 
     <!-- configure whether the real hardware is enabled or not -->
     <arg name="head_enabled" default="false"/>
@@ -29,7 +29,8 @@
         <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=false"/>
     </group>
     <group unless="$(arg use_robot_sim)">
-        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=false"/>
+        <!-- TODO: Set mimic tag to false when using sensorised hand-->
+        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
     </group>
 
     <group if="$(arg use_joint_state_publisher)">
@@ -143,14 +144,17 @@
 
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
+
+        
     </group>
     
     <group ns="left_hand">
         <group if="$(arg left_hand_enabled)">
             <!--add a copy of the robot description within the name space -->
-            <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=false"/>
+            
 
              <group if="$(arg use_sensorised_hand)">
+                <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=false"/>
 
                 <rosparam command="load" file="$(find boris_description)/config/left_pisa_hand_full_names.yaml" />
                 <include file="$(find soft_hand_ros_control)/launch/soft_hand_sensorised_hw.launch">
@@ -160,13 +164,16 @@
 
                 <node name="data_glove" pkg="boris_tools" type="run_data_glove.bash" />
             </group>
-            <!-- <group unless="$(arg use_sensorised_hand)">
+            <group unless="$(arg use_sensorised_hand)">
+
+                <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
+                
                 <rosparam command="load" file="$(find boris_description)/config/left_hand_names.yaml" />
                 <include file="$(find soft_hand_ros_control)/launch/soft_hand_hw.launch">
-                    <arg name="use_default_joint_names" value="false"/>
+                    <arg name="use_deafult_joint_names" value="false"/>
                     <arg name="hand_id" value="1"/>
                 </include>
-            </group> -->
+            </group>
         </group>
 
         <!-- load the controllers in current namespace -->
@@ -215,7 +222,7 @@
             <group unless="$(arg use_sensorised_hand)">
                 <rosparam command="load" file="$(find boris_description)/config/right_hand_names.yaml" />
                 <include file="$(find soft_hand_ros_control)/launch/soft_hand_hw.launch">
-                    <arg name="use_default_joint_names" value="false"/>
+                    <arg name="use_deafult_joint_names" value="false"/>
                     <arg name="hand_id" value="2"/>
                 </include>
             </group>

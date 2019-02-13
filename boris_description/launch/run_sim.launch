@@ -1,7 +1,7 @@
 <launch>
     <!-- LAUNCH INTERFACE -->
     <arg name="gui" default="false" />
-    <arg name="gazebo_gui" default="true" />
+    <arg name="gazebo_gui" default="false" />
     <arg name="robot_name" default="boris"/>
     <arg name="use_rviz" default="true"/>
     <arg name="use_joint_state_publisher" default="true"/>
@@ -155,6 +155,7 @@
 
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
+        <node name="controller_stopper" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="--stopped joint_impedance_controller joint_efforts_trajectory_controller"/>
     </group>
     
     <group ns="left_hand">
@@ -172,7 +173,7 @@
 
         <!-- load the controllers in current namespace -->
         <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="joint_state_controller joint_trajectory_controller"/>
-
+   
     </group>
 
     <group ns="right_arm">

@@ -223,7 +223,14 @@ class MoveitWrapper(object):
 
         assert self._ready
 
-        return self._move_groups[group_name].execute(plan_msg=plan_msg, wait=wait)
+
+        ret = self._move_groups[group_name].execute(plan_msg=plan_msg, wait=wait)
+
+        if wait:
+            self._move_groups[group_name].stop()
+            self._move_groups[group_name].clear_pose_targets()
+
+        return ret
 
 
     def compute_cartesian_path(self, group_name, waypoints):
