@@ -1,7 +1,7 @@
 left_arm:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 300  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
@@ -18,10 +18,10 @@ left_arm:
     root_name: left_arm_base_link
     tip_name: left_arm_7_link
   joint_impedance_controller:
-    type: lwr_controllers/JointImpedanceController
+    type: lwr_controllers/GJointImpedanceController
     root_name: left_arm_base_link
     tip_name: left_arm_7_link
-    stiffness_gains: 250
+    stiffness_gains: 100
     damping_gains: 0.5
   cartesian_impedance_boris_controller:
     type: boris_controllers/CartesianImpedanceBorisController
@@ -34,24 +34,30 @@ left_arm:
     root_name: left_arm_base_link
     tip_name: left_arm_7_link
     publish_cartesian_pose: false
-  # stiffness_joint_trajectory_controller:
-  #   type: effort_controllers/JointTrajectoryController
-  #   joints: 
-  #     - left_arm_0_joint
-  #     - left_arm_1_joint
-  #     - left_arm_2_joint
-  #     - left_arm_3_joint
-  #     - left_arm_4_joint
-  #     - left_arm_5_joint
-  #     - left_arm_6_joint
-  #   gains: # Required because we're controlling an effort interface
-  #     left_arm_0_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
-  #     left_arm_1_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
-  #     left_arm_2_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
-  #     left_arm_3_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
-  #     left_arm_4_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
-  #     left_arm_5_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
-  #     left_arm_6_joint: {p: 100,  d: 1, i: 0, i_clamp: 1}
+  effort_joint_trajectory_controller:
+    type: effort_controllers/JointTrajectoryController
+    joints: 
+      - left_arm_0_joint
+      - left_arm_1_joint
+      - left_arm_2_joint
+      - left_arm_3_joint
+      - left_arm_4_joint
+      - left_arm_5_joint
+      - left_arm_6_joint
+    gains: # Required because we're controlling an effort interface
+      left_arm_0_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+      left_arm_1_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+      left_arm_2_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+      left_arm_3_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+      left_arm_4_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+      left_arm_5_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+      left_arm_6_joint: {p: 500,  d: 0.4, i: 0, i_clamp: 1}
+
+  gravity_compensation_controller:
+    type: lwr_controllers/GravityCompensation
+    root_name: left_arm_base_link
+    tip_name: left_arm_7_link
+
   # stiffness_trajectory_controller:
   #   type: position_controllers/JointTrajectoryController
   #   joints:
@@ -75,7 +81,7 @@ left_hand:
 right_arm:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 300  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
@@ -124,7 +130,7 @@ right_hand:
 head:
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 300  
+    publish_rate: 200  
   joint_trajectory_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
