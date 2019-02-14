@@ -162,6 +162,33 @@ class ControllerManagerInterface(object):
                 controllers.append(uninit_ctrl)
         return controllers
 
+    def controller_dict(self):
+
+        controllers = self.list_controllers()
+
+        controller_dict = {}
+        for c in controllers:
+            controller_dict[c.name] = c
+
+
+        return controller_dict
+
+    def is_running(self, controller_name):
+
+        controllers = self.controller_dict()
+
+        ctrl_state = controllers.get(controller_name,None)
+
+        return ctrl_state is not None and ctrl_state.state=="running"
+
+    def is_loaded(self, controller_name):
+
+        controllers = self.controller_dict()
+
+        ctrl_state = controllers.get(controller_name,None)
+
+        return ctrl_state is not None and ctrl_state.state!="uninitialized"
+
 
 
 

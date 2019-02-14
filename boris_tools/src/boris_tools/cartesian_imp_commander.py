@@ -18,36 +18,78 @@ class CartesianImpedanceCommander(object):
         self._cartesian_command_pub = rospy.Publisher('left_arm/cartesian_impedance_controller/command', CartesianImpedancePoint, tcp_nodelay=False, queue_size=1)
 
         self._cmi = ControllerManagerInterface(ns=ns)
-        self._cmi.load_controller('cartesian_impedance_controller')
-        self._cmi.load_controller('joint_impedance_controller')
+
+        if not self._cmi.is_loaded('cartesian_impedance_controller'):
+            self._cmi.load_controller('cartesian_impedance_controller')
+
+            
+    def wait_loaded(self, name):
+
+        while not self._cmi.is_loaded(name) and not rospy.is_shutdown():
+            rospy.sleep(0.25)
+
+    def wait_running(self, name):
+
+        while not self._cmi.is_running(name) and not rospy.is_shutdown():
+            rospy.sleep(0.25)
+
+    def wait_stopped(self, name):
+
+        while self._cmi.is_running(name) and not rospy.is_shutdown():
+            rospy.sleep(0.25)
 
     def activate(self):
 
-        self._cmi.stop_controller('joint_trajectory_controller')
-        # rospy.sleep(3.0)
-        self._cmi.start_controller('cartesian_impedance_controller')
-        # rospy.sleep(3.0)
+        if self._cmi.is_running('joint_trajectory_controller'):
+            self._cmi.stop_controller('joint_trajectory_controller')
+
+            self.wait_stopped('joint_trajectory_controller')
+
+        if not self._cmi.is_running('cartesian_impedance_controller'):
+            self._cmi.start_controller('cartesian_impedance_controller')
+            self.wait_running('cartesian_impedance_controller')
+    
 
     def stop(self):
 
-        self._cmi.stop_controller('cartesian_impedance_controller')
-        # rospy.sleep(3.0)
-        self._cmi.start_controller('joint_trajectory_controller')
-        # rospy.sleep(3.0)
+        if self._cmi.is_running('cartesian_impedance_controller'):
+            self._cmi.stop_controller('cartesian_impedance_controller')
+            self.wait_stopped('cartesian_impedance_controller')
 
-    def stop_special(self):
+        if not self._cmi.is_running('joint_trajectory_controller'):
+            self._cmi.start_controller('joint_trajectory_controller')
+            self.wait_running('joint_trajectory_controller')
 
-        self._cmi.stop_controller('cartesian_impedance_controller')
+    # def stop_special(self):
 
-        # rospy.sleep(1.5)
-        self._cmi.start_controller('joint_impedance_controller')
-        # rospy.sleep(1.5)
-        self._cmi.stop_controller('joint_impedance_controller')
-        # rospy.sleep(1.5)
+
+    #     if self._cmi.is_running('cartesian_impedance_controller'):
+    #         print "Stopping Cartesian Impedance controller!"
+    #         self._cmi.stop_controller('cartesian_impedance_controller')
+    #     rospy.sleep(3.0)
+
         
-        self._cmi.start_controller('joint_trajectory_controller')
+
+    #     # rospy.sleep(1.5)
+    #     if not self._cmi.is_running('joint_impedance_controller'):
+    #         print "Starting Impedance controller!"
+    #         self._cmi.start_controller('joint_impedance_controller')
+    #         rospy.sleep(2.0)
+    #         print "Stopping Impedance controller!"
+    #         self._cmi.stop_controller('joint_impedance_controller')
+    #         rospy.sleep(2.0)
+
+
+    #     if not self._cmi.is_running('joint_trajectory_controller'):
+    #         self._cmi.start_controller('joint_trajectory_controller')
+    #         print "Starting Position controller!"
+    #         rospy.sleep(5.0)
+        
+    #     rospy.sleep(1.5)
+        
 
         # rospy.sleep(1.5)
+
 
     def compute_command(self, ee_goal):
 

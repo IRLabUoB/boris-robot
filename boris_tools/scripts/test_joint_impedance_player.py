@@ -17,7 +17,7 @@ from boris_tools.trajectory_io import parse_trajectory_file, make_ros_trajectory
 from boris_tools.boris_robot import BorisRobot
 from boris_tools.boris_kinematics import boris_kinematics
 
-from boris_tools.cartesian_imp_commander import CartesianImpedanceCommander
+from boris_tools.joint_imp_commander import JointImpedanceCommander
 
 def main():
 
@@ -41,7 +41,7 @@ def main():
                     'box_traj.csv',
                     'ibuprofen_trajectory.csv']
 
-    trajectory, _ = parse_trajectory_file('contact_trajectories/'+trajectories[5])
+    trajectory, _ = parse_trajectory_file('contact_trajectories/'+trajectories[1])
 
     traj_msg = make_ros_trajectory_msg(trajectory,joint_names, index_map=(1,8))
     traj_hand_msg = make_ros_trajectory_msg(trajectory,hand_joint_names[:1], index_map=(8,9))
@@ -49,85 +49,74 @@ def main():
     cartesian_traj = make_cartesian_trajectory(trajectory, index_map=(1,8), fk_func=kin.forward_kinematics)
 
 
-    cic = CartesianImpedanceCommander()
+    jic = JointImpedanceCommander()
 
-    cic.stop()
+    jic.stop()
 
-    rospy.sleep(3.0)
+    
 
-    boris.goto_with_moveit('left_arm', traj_msg.points[0].positions)
-    boris.stop_trajectory('left_arm')
+    plan = boris.get_moveit_plan("left_arm",traj_msg.points[0].positions)
+    plan_traj = plan.joint_trajectory
 
+    # print traj_msg.header.seq
+    # print traj_msg.header.stamp
+    # print traj_msg.joint_names
+    # print traj_msg.points[0].time_from_start.to_sec(), " - ", traj_msg.points[-1].time_from_start.to_sec()
+    # print "-----------------"
 
+    # print "Path Size:", len(plan.joint_trajectory.points)
+    
+    
 
-    rospy.sleep(3.0)
-
-    cic.activate()
-
-    rospy.sleep(5.0)
-
-    print kin._base_link
-    print kin._tip_link
-    # print cartesian_traj
+    # print plan.joint_trajectory.header.seq
+    # print plan.joint_trajectory.joint_names
+    # print plan.joint_trajectory.header.stamp
+    # print plan.joint_trajectory.points[0].time_from_start.to_sec(), " - ", plan.joint_trajectory.points[-1].time_from_start.to_sec()
+    # c = raw_input("go:")
+    # boris.follow_trajectory("left_arm",plan.joint_trajectory,first_waypoint_moveit=False) 
+    # while not rospy.is_shutdown():
+    #     c = raw_input("next: ")
+         
+    #     rospy.sleep(0.1)
+    # print kin._base_link
+    # print kin._tip_link
+    # # print cartesian_traj
     
     t0 = rospy.Time.now()
     i = 0
-    n_wpts = len(trajectory)
-    total_time = trajectory[-1][0]
+    n_wpts = len(plan_traj.points)
+    total_time = plan_traj.points[-1].time_from_start.to_sec()
     frequency = n_wpts/total_time
 
     print "Frequency: ", frequency
     rate = rospy.Rate(frequency)
 
-    boris.follow_trajectory("left_hand",traj_hand_msg,first_waypoint_moveit=False)
+    jic.activate()
+
+    jic.send_damping([25,25,25,25,10,0.01,0.001])#[0.1,0.1,0.1,0.1,0.1,0.1,0.1]
+    jic.send_stiffness([200,200,200,100,60,50,10]) #[800,800,800,800,300,300,500]
 
     cmd = None
-    for pose in cartesian_traj:
+    for joint_goal in (plan_traj.points+traj_msg.points):
         
-        cmd = cic.compute_command((pose[:3],pose[3:]))
+        cmd = jic.compute_command(joint_goal.positions)
         
-        print "Time: ", (rospy.Time.now()-t0).to_sec(), " Expect: ", trajectory[i][0]
+        print "Time: ", (rospy.Time.now()-t0).to_sec(), " Expect: ", joint_goal.time_from_start.to_sec()
+        print "Cmd: ", cmd.data
         i+=1
-        # c = raw_input("next: ")
+        c = raw_input("next: ")
         
         if rospy.is_shutdown():
             break
 
-        # For simulation only (BE CAREFUL)
-        # cmd.k_FRI.x = cmd.k_FRI.y = cmd.k_FRI.z = 8000
-        # cmd.k_FRI.rx = cmd.k_FRI.ry = cmd.k_FRI.rz = 2000
 
-        cmd.k_FRI.x = cmd.k_FRI.y = cmd.k_FRI.z = 800
-        cmd.k_FRI.rx = cmd.k_FRI.ry = cmd.k_FRI.rz = 50
-        cmd.d_FRI.x = cmd.d_FRI.y = cmd.d_FRI.z = 0.65
-        cmd.d_FRI.rx = cmd.d_FRI.ry = cmd.d_FRI.rz = 0.65
-        cic.send_command(cmd)
+        jic.send_command(cmd)
         rate.sleep()
 
     tf = rospy.Time.now()
 
     print "Final Time: ", (tf-t0).to_sec(), " Expect: ", trajectory[-1][0]
 
-    # Hold for 3s with higher stiffness before switching to position control (get closer to the last goal)
-
-    # hold_time0 = rospy.Time.now().to_sec()
-    # pose = cic.get_current_pose()
-    # hold_rate = rospy.Rate(200)
-    # while (rospy.Time.now().to_sec() - hold_time0) < 10.0:
-    #     cmd = cic.compute_command(pose)
-    #     cmd.k_FRI.x = cmd.k_FRI.y = cmd.k_FRI.z = 500
-    #     cmd.k_FRI.rx = cmd.k_FRI.ry = cmd.k_FRI.rz = 50
-
-    #     cic.send_command(cmd)
-    #     hold_rate.sleep()
-
-    
-
-    # cic.stop()
-
-    # rospy.sleep(1.0)
-    # boris.goto_with_moveit('left_arm', traj_msg.points[0].positions)
-    # boris.stop_trajectory('left_arm')
 
     rospy.sleep(3.0)
 

@@ -170,10 +170,23 @@ class BorisRobot(object):
             plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
             self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan)
 
+    def get_moveit_plan(self, limb_name, joint_values):
+
+
+        if self._has_moveit:
+
+            # Go to first waypoint
+            self._moveit_wrapper.set_joint_value_target(limb_name, joint_values)
+            plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
+
+            return plan
+        else:
+            return None
+
 
     def follow_trajectory(self, limb_name, joint_trajectory_msg, first_waypoint_moveit=True):
         """
-        Using topic interface for trajectory tracking
+        Using topic interface for trajectory tracking (optionally going to the first waypoint with moveit)
         Send joint trajectory message to be executed by the specified limb
         @type limb_name: str
         @param limb_name: name of the limb which should follow the trajectory 
