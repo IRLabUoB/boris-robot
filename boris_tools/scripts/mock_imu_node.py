@@ -13,7 +13,7 @@ import math
 import quaternion_rotation as qr
 
 def get_mock_gravity(buf, child_frame_id):
-    rate = rospy.Rate(10.0)
+    rate = rospy.Rate(30.0)
     while not rospy.is_shutdown():
         try:
             trans = buf.lookup_transform('world', child_frame_id, rospy.Time(0))
@@ -50,13 +50,15 @@ def main():
     print("sensor_rate:", sensor_rate)
     
 
-    imu_publisher = rospy.Publisher(imu_topic, Imu, queue_size=0)
-    imu_publisher_scalled = rospy.Publisher("left_arm/imu_sensor_scalled", Imu, queue_size=0)
+    imu_publisher = rospy.Publisher(imu_topic, Imu, queue_size=None)
+    imu_publisher_scalled = rospy.Publisher("left_arm/imu_sensor_scalled", Imu, queue_size=None)
 
     # Polling from network
     while not rospy.is_shutdown():
 
+        # print "Getting gravity"
         gravity = get_mock_gravity(tf_buffer,frame_id)
+        # print "Got it"
 
         # print gravity
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import warnings
 
 import numpy as np
 import rospy
@@ -12,15 +13,24 @@ from boris_tools.controller_manager_interface import ControllerManagerInterface
 class CartesianImpedanceCommander(object):
 
 
-    def __init__(self, ns='left_arm/', base_link='left_arm_base_link'):
+    def __init__(self, ns='left_arm'):
 
-        self._base_link = base_link
-        self._cartesian_command_pub = rospy.Publisher('left_arm/cartesian_impedance_controller/command', CartesianImpedancePoint, tcp_nodelay=False, queue_size=1)
+        assert ns in ["left_arm", "right_arm"]
 
-        self._cmi = ControllerManagerInterface(ns=ns)
+        self._base_link = '%s_base_link'%(ns,)
+        self._tip_link = '%s_7_link'%(ns,)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self._cartesian_command_pub = rospy.Publisher('%s/cartesian_impedance_controller/command'%(ns,), CartesianImpedancePoint, tcp_nodelay=False, queue_size=1)
+
+        self._cmi = ControllerManagerInterface(ns="%s/"%(ns,))
 
         if not self._cmi.is_loaded('cartesian_impedance_controller'):
             self._cmi.load_controller('cartesian_impedance_controller')
+
+
+        self._is_active = False
 
             
     def wait_loaded(self, name):
@@ -48,6 +58,8 @@ class CartesianImpedanceCommander(object):
         if not self._cmi.is_running('cartesian_impedance_controller'):
             self._cmi.start_controller('cartesian_impedance_controller')
             self.wait_running('cartesian_impedance_controller')
+
+            self._is_active = True
     
 
     def stop(self):
@@ -56,10 +68,15 @@ class CartesianImpedanceCommander(object):
             self._cmi.stop_controller('cartesian_impedance_controller')
             self.wait_stopped('cartesian_impedance_controller')
 
+            self._is_active = False
+
         if not self._cmi.is_running('joint_trajectory_controller'):
             self._cmi.start_controller('joint_trajectory_controller')
             self.wait_running('joint_trajectory_controller')
 
+    def is_active(self):
+
+        return self._is_active
     # def stop_special(self):
 
 
@@ -140,7 +157,7 @@ class CartesianImpedanceCommander(object):
 
         tfm = TFManager()
 
-        p, q, t = tfm.get_transform('left_arm_base_link','left_arm_7_link')
+        p, q, t = tfm.get_transform(self._base_link,self._tip_link)
 
         pose = (p,q)
 

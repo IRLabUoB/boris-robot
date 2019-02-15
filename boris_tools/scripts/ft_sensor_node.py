@@ -15,9 +15,10 @@ import copy
 GRIPPER_MASS = 0.88147962180902968
 GRIPPER_COM = np.array([-0.0007626476070273522, -0.0015036809041290501, 0.10747368058393117])
 BIAS = np.array([-0.6596273431449243, 0.3271468132085467, -5.0491181111789025, 0.004470535053033756,-0.03623978486740379, -0.008814876887642405])
-COMPENSATED_BIAS = np.array([-0.06679442, -0.12326067, -0.24217093,0.04683272, 0.0758901, -0.00438831])
+COMPENSATED_BIAS = np.array([-0.18087081, -0.26490882, -1.86345736, 0.05080739,0.07841416,-0.01272875])#np.array([-0.06679442, -0.12326067, -0.24217093,0.04683272, 0.0758901, -0.00438831])
 
 RECOMPUTE_COMP_BIAS = False
+
 
 class IMUSensor(object):
 
@@ -25,16 +26,18 @@ class IMUSensor(object):
                 
                 self._sub = rospy.Subscriber("/left_arm/imu_sensor", Imu, self.imu_callback)
                 self._accel = None
+                self._last_stamp = 0.0
 
         def imu_callback(self, imu_msg):
 
                 self._accel = imu_msg.linear_acceleration
+                self._last_stamp = imu_msg.header.stamp.to_sec()
 
         def get_accel(self):
                 if self._accel is None:
-                        return np.zeros(3)
+                        return np.zeros(3), self._last_stamp
 
-                return copy.deepcopy(np.array([self._accel.x, self._accel.y, self._accel.z]))
+                return copy.deepcopy(np.array([self._accel.x, self._accel.y, self._accel.z])), copy.deepcopy(self._last_stamp)
 
 
 
@@ -85,10 +88,14 @@ def main():
     while not rospy.is_shutdown():
 
         force, torque, stamp = ft_sensor.read_wrench()
-
-        # Raw readings
-        wrench_stamped_raw = make_wrench_msg(force, torque, frame_id, stamp)
-        ft_publisher_raw.publish(wrench_stamped_raw)
+        time_now = rospy.Time.now().to_sec()
+        time_offset = time_now - stamp
+        # print("WARNING: time offset: ", time_offset)
+        # if np.abs(time_offset) > 1.0:
+        #         print("WARNING: time offset: ", time_offset)
+        
+        stamp = time_now
+       
 
         # Predicted readings
         
@@ -96,7 +103,8 @@ def main():
 
         # Accel vector (mainly the direction of gravity) is given in local frame of the f/t sensor
         # At the moment we are using only a mock IMU that gives the locally measured gravit vector only
-        accel = imu_sensor.get_accel()
+        accel, accel_stamp = imu_sensor.get_accel()
+        # stamp = accel_stamp
 
         if np.isclose(np.linalg.norm(accel),0.0):
                 continue
@@ -108,6 +116,10 @@ def main():
         wrench_stamped_pred = make_wrench_msg(force_pred, torque_pred, frame_id, stamp)
 
         ft_publisher_pred.publish(wrench_stamped_pred)
+
+         # Raw readings
+        wrench_stamped_raw = make_wrench_msg(force, torque, frame_id, stamp)
+        ft_publisher_raw.publish(wrench_stamped_raw)
 
         # Calibrated readings
         

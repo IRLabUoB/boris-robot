@@ -49,38 +49,11 @@ def main():
     cartesian_traj = make_cartesian_trajectory(trajectory, index_map=(1,8), fk_func=kin.forward_kinematics)
 
 
-    jic = JointImpedanceCommander()
-
-    jic.stop()
-
+    boris.exit_control_mode()
     
 
     plan = boris.get_moveit_plan("left_arm",traj_msg.points[0].positions)
     plan_traj = plan.joint_trajectory
-
-    # print traj_msg.header.seq
-    # print traj_msg.header.stamp
-    # print traj_msg.joint_names
-    # print traj_msg.points[0].time_from_start.to_sec(), " - ", traj_msg.points[-1].time_from_start.to_sec()
-    # print "-----------------"
-
-    # print "Path Size:", len(plan.joint_trajectory.points)
-    
-    
-
-    # print plan.joint_trajectory.header.seq
-    # print plan.joint_trajectory.joint_names
-    # print plan.joint_trajectory.header.stamp
-    # print plan.joint_trajectory.points[0].time_from_start.to_sec(), " - ", plan.joint_trajectory.points[-1].time_from_start.to_sec()
-    # c = raw_input("go:")
-    # boris.follow_trajectory("left_arm",plan.joint_trajectory,first_waypoint_moveit=False) 
-    # while not rospy.is_shutdown():
-    #     c = raw_input("next: ")
-         
-    #     rospy.sleep(0.1)
-    # print kin._base_link
-    # print kin._tip_link
-    # # print cartesian_traj
     
     t0 = rospy.Time.now()
     i = 0
@@ -91,26 +64,53 @@ def main():
     print "Frequency: ", frequency
     rate = rospy.Rate(frequency)
 
-    jic.activate()
-
-    jic.send_damping([25,25,25,25,10,0.01,0.001])#[0.1,0.1,0.1,0.1,0.1,0.1,0.1]
-    jic.send_stiffness([200,200,200,100,60,50,10]) #[800,800,800,800,300,300,500]
+    boris.set_control_mode(mode="joint_impedance", limb_name="left_arm")
 
     cmd = None
-    for joint_goal in (plan_traj.points+traj_msg.points):
+    for joint_goal in (plan_traj.points):
         
-        cmd = jic.compute_command(joint_goal.positions)
+        cmd = boris.cmd_joint_angles(angles=joint_goal.positions,execute=True)
+
+       
         
         print "Time: ", (rospy.Time.now()-t0).to_sec(), " Expect: ", joint_goal.time_from_start.to_sec()
         print "Cmd: ", cmd.data
         i+=1
-        c = raw_input("next: ")
+        # c = raw_input("next: ")
         
         if rospy.is_shutdown():
             break
 
+        rate.sleep()
 
-        jic.send_command(cmd)
+    tf = rospy.Time.now()
+
+    print "Final Time: ", (tf-t0).to_sec(), " Expect: ", trajectory[-1][0]
+
+    t0 = rospy.Time.now()
+    i = 0
+    n_wpts = len(traj_msg.points)
+    total_time = traj_msg.points[-1].time_from_start.to_sec()
+    frequency = n_wpts/total_time
+
+    print "Frequency: ", frequency
+    rate = rospy.Rate(frequency)
+    cmd = None
+    boris.follow_trajectory("left_hand",traj_hand_msg,first_waypoint_moveit=False)  
+    for joint_goal in (traj_msg.points):
+        
+        cmd = boris.cmd_joint_angles(angles=joint_goal.positions,execute=True)
+
+       
+        
+        print "Time: ", (rospy.Time.now()-t0).to_sec(), " Expect: ", joint_goal.time_from_start.to_sec()
+        print "Cmd: ", cmd.data
+        i+=1
+        # c = raw_input("next: ")
+        
+        if rospy.is_shutdown():
+            break
+
         rate.sleep()
 
     tf = rospy.Time.now()

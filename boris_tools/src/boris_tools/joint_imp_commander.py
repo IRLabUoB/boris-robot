@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import warnings
 
 import numpy as np
 import rospy
@@ -14,16 +15,24 @@ class JointImpedanceCommander(object):
 
     def __init__(self, ns='left_arm'):
 
+        assert ns in ["left_arm", "right_arm"]
+
         self._ns = ns
 
-        self._command_pub = rospy.Publisher('%s/joint_impedance_controller/command'%(self._ns,), Float64MultiArray, tcp_nodelay=False, queue_size=1)
-        self._command_stiffness_pub = rospy.Publisher('%s/joint_impedance_controller/stiffness'%(self._ns,), Float64MultiArray, tcp_nodelay=False, queue_size=1)
-        self._command_damping_pub = rospy.Publisher('%s/joint_impedance_controller/damping'%(self._ns,), Float64MultiArray, tcp_nodelay=False, queue_size=1)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+
+            self._command_pub = rospy.Publisher('%s/joint_impedance_controller/command'%(self._ns,), Float64MultiArray, tcp_nodelay=False, queue_size=None)
+            self._command_stiffness_pub = rospy.Publisher('%s/joint_impedance_controller/stiffness'%(self._ns,), Float64MultiArray, tcp_nodelay=False, queue_size=None)
+            self._command_damping_pub = rospy.Publisher('%s/joint_impedance_controller/damping'%(self._ns,), Float64MultiArray, tcp_nodelay=False, queue_size=None)
 
         self._cmi = ControllerManagerInterface(ns="%s/"%(ns,))
 
         if not self._cmi.is_loaded('joint_impedance_controller'):
             self._cmi.load_controller('joint_impedance_controller')
+
+
+        self._is_active = False
 
         
             
@@ -52,6 +61,8 @@ class JointImpedanceCommander(object):
         if not self._cmi.is_running('joint_impedance_controller'):
             self._cmi.start_controller('joint_impedance_controller')
             self.wait_running('joint_impedance_controller')
+
+        self._is_active = self._cmi.is_running('joint_impedance_controller')
     
 
     def stop(self):
@@ -60,11 +71,15 @@ class JointImpedanceCommander(object):
             self._cmi.stop_controller('joint_impedance_controller')
             self.wait_stopped('joint_impedance_controller')
 
+        self._is_active = self._cmi.is_running('joint_impedance_controller')
+
         if not self._cmi.is_running('joint_trajectory_controller'):
             self._cmi.start_controller('joint_trajectory_controller')
             self.wait_running('joint_trajectory_controller')
 
+    def is_active(self):
 
+        return self._is_active
 
     def compute_command(self, joint_goal):
         cmd = Float64MultiArray()

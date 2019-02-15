@@ -1,0 +1,1 @@
+ffmpeg -framerate 18 -i frame%04d.jpg -vf vflip -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4

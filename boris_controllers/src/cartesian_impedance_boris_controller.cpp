@@ -184,7 +184,7 @@ void CartesianImpedanceBorisController::update(const ros::Time& time, const ros:
     // compute Jacobian
     jnt_to_jac_solver_->JntToJac(joint_msr_states_.q,J_ge_);
 
-    ROS_INFO_STREAM(J_ge_.data);
+    // ROS_INFO_STREAM(J_ge_.data);
     for (size_t i = 0; i < joint_handles_.size(); i++)
     {
         tau_(i) = G_(i) + C_(i);
@@ -240,7 +240,7 @@ void CartesianImpedanceBorisController::update(const ros::Time& time, const ros:
         //tau_(i) = joint_handles_[i].getEffort();
         joint_handles_[i].setCommand(tau_(i));
         // ROS_INFO_STREAM("Effort [" << i << "] " << joint_handles_[i].getEffort() << " tau_(i) = " << tau_(i));
-        ROS_INFO_STREAM(" tau_(i) = " << tau_(i));
+        // ROS_INFO_STREAM(" tau_(i) = " << tau_(i));
         // ROS_INFO_STREAM("K [" << i << "] " << K_(i));
 
         joint_stiffness_handles_[i].setCommand(0.0*K_(i));
@@ -264,7 +264,7 @@ void CartesianImpedanceBorisController::update(const ros::Time& time, const ros:
 
     tf::transformKDLToTF( x_des_, tf_ee_pose_);
     br_ee_pose_.sendTransform(tf::StampedTransform(tf_ee_pose_, ros::Time::now(), "right_arm_base_link", "ciao"));
-    ROS_INFO_STREAM(" ");
+    // ROS_INFO_STREAM(" ");
 }
 
 

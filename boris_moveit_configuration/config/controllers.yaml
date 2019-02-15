@@ -1,7 +1,7 @@
 controller_list:
   - name: /left_arm/joint_trajectory_controller
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory
+    action_ns: follow_joint_trajectory2
     default: true
     joints:
       - left_arm_0_joint
