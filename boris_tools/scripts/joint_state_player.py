@@ -12,13 +12,17 @@ def main():
     moveit_commander.roscpp_initialize(sys.argv)
     rospy.init_node("joint_state_player_node")
 
+    waypoint_file = rospy.get_param('wpt_file','scan_waypoints.npy')
+    limb_name = rospy.get_param('limb_name','left_arm')
 
     robot = moveit_commander.RobotCommander()
     scene = moveit_commander.PlanningSceneInterface()
 
-    arm = moveit_commander.MoveGroupCommander("right_arm")
+    
+    arm = moveit_commander.MoveGroupCommander(limb_name)
 
-    waypoints = np.load('calib_real_right03.npy') #calib_sim3.npy #calib_real_right03.npy
+    
+    waypoints = np.load(waypoint_file) #calib_sim3.npy #calib_real_right03.npy
 
     rate = rospy.Rate(100)
     joint_angle_target = np.zeros(7)

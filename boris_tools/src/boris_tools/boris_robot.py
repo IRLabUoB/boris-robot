@@ -16,6 +16,8 @@ from boris_tools.boris_kinematics import boris_kinematics
 from cartesian_imp_commander import CartesianImpedanceCommander
 from joint_imp_commander import JointImpedanceCommander
 
+import numpy as np
+
 class BorisRobot(object):
     
 
@@ -98,7 +100,19 @@ class BorisRobot(object):
         self._commander = None
         self._mode = "position"
 
+        self._joint_stiffness = np.array([250,250,200,100,60,50,10])
+        self._joint_damping = np.array([25,25,25,25,10,0.01,0.001])
 
+        self._ready = False
+
+    def is_enabled(self):
+
+        return self._ready
+
+    def wait_enabled(self):
+        while not self._ready and not rospy.is_shutdown():
+            rospy.sleep(0.005)
+            rospy.logwarn("Robot not enabled yet, waiting...")
 
     def _on_joint_states(self, msg):
         for idx, name in enumerate(msg.name):
@@ -107,6 +121,7 @@ class BorisRobot(object):
                 self._joint_velocity[name] = msg.velocity[idx]
                 self._joint_effort[name] = msg.effort[idx]
         
+        self._ready = True
         # joint_angles = np.array(joint_state_msg.position)
         # joint_velocities = np.array(joint_state_msg.velocity)
         # joint_efforts = np.array(joint_state_msg.effort)
@@ -119,6 +134,25 @@ class BorisRobot(object):
         @return: unordered dict of joint name Keys to angle (rad) Values
         """
         return deepcopy(self._joint_angle)
+
+    def angles(self, limb_name):
+        """
+        Return all joint angles for a particular limb.
+        @param limb_name: limb_name
+        options: right_arm, left_arm, right_hand, left_hand, head
+        @rtype: [float]
+        @return: joint angles in the order specified in the robot joint_names configuration file
+        """
+
+        angles = np.zeros(7)
+        
+        try:
+            joint_names = self.joint_names(limb_name)
+            angles = np.array([self.joint_angle(name) for name in joint_names])
+        except:
+            pass
+
+        return angles
 
     def joint_angle(self, joint):
         """
@@ -286,8 +320,8 @@ class BorisRobot(object):
             self._commander = JointImpedanceCommander(ns=limb_name)
             self._commander.activate()
 
-            self._commander.send_damping([25,25,25,25,10,0.01,0.001])#[0.1,0.1,0.1,0.1,0.1,0.1,0.1] #[25,25,25,25,10,0.01,0.001]
-            self._commander.send_stiffness([250,250,200,100,60,50,10]) #[800,800,800,800,300,300,500]#[250,250,200,100,60,50,10]
+            self._commander.send_damping(self._joint_damping)#[0.1,0.1,0.1,0.1,0.1,0.1,0.1] #[25,25,25,25,10,0.01,0.001]
+            self._commander.send_stiffness(self._joint_stiffness) #[800,800,800,800,300,300,500]#[250,250,200,100,60,50,10]
 
 
         self._mode = mode
@@ -343,17 +377,23 @@ class BorisRobot(object):
             self._commander.send_command(cmd)
 
 
-    def set_joint_impedance(self, impedance):
-        pass
+    def set_joint_impedance(self, stiffness, damping):
+        self._joint_stiffness = stiffness
+        self._joint_damping = damping
+
+        self._commander.send_stiffness(self._joint_stiffness) 
+        self._commander.send_damping(self._joint_damping)
+
+    def set_gravity_compesantion_mode(self):
+
+        self.set_control_mode(mode="joint_impedance")
+        self._commander.send_stiffness(np.zeros(7)) 
+        self._commander.send_damping(np.ones(7)*10.0)
+
     
-    def set_joint_damping(self, damping):
+    def set_cart_impedance(self, stiffness, damping):
         pass
 
-    def set_cart_impedance(self, impedamce):
-        pass
 
-    def set_cart_damping(self, damping):
-        pass
-        
 
     #def end_effector(self)
