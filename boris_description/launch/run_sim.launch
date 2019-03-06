@@ -53,14 +53,7 @@
     <!-- load hardware interface and controller configurations -->
     <rosparam command="load" file="$(find boris_description)/config/boris_controllers.yaml"/>
     <rosparam command="load" file="$(find boris_description)/config/hardware_interfaces.yaml"/>
-    <!-- Load gazebo controller configurations -->
-  	<!-- Note: You MUST load these PID parameters for all joints that are using
-       the PositionJointInterface, otherwise the arm + gripper will act like a
-       giant parachute, counteracting gravity, and causing some of the wheels
-       to lose contact with the ground, so the robot won't be able to properly
-       navigate. See
-       https://github.com/ros-simulation/gazebo_ros_pkgs/issues/612 -->
-    <rosparam file="$(find boris_description)/config/gazebo_controllers.yaml" command="load" />
+    
 
     <!-- publish the environment in moveit -->
     <!-- (useful for kinematic planning, not fully completed)-->
@@ -121,7 +114,14 @@
 
     
     <group ns="head">
-
+        <!-- Load gazebo controller configurations -->
+        <!-- Note: You MUST load these PID parameters for all joints that are using
+        the PositionJointInterface, otherwise the arm + gripper will act like a
+        giant parachute, counteracting gravity, and causing some of the wheels
+        to lose contact with the ground, so the robot won't be able to properly
+        navigate. See
+        https://github.com/ros-simulation/gazebo_ros_pkgs/issues/612 -->
+        <rosparam file="$(find boris_description)/config/gazebo_controllers.yaml" command="load" />
         <group if="$(arg head_enabled)">
             <!--add a copy of the robot description within the name space -->
             <param name="robot_description" command="$(find xacro)/xacro --inorder $(find boris_description)/robot/$(arg robot_name).urdf.xacro use_mimic_tag:=true"/>
