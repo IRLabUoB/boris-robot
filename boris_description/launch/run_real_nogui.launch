@@ -1,0 +1,22 @@
+<launch>
+
+ <!-- Include official launch file and specify camera_info urls -->
+ <include file="$(find boris_description)/launch/run_real.launch">
+   <!-- provide arguments to that launch file -->
+   
+    <arg name="gui" value="false" />
+    <arg name="robot_name" value="boris"/>
+    <arg name="use_rviz" value="false"/>
+    <arg name="use_joint_state_publisher" value="true"/>
+    <arg name="load_moveit" value="true"/>
+    <arg name="use_sensorised_hand" default="false"/>
+
+    <!-- configure whether the real hardware is enabled or not -->
+    <arg name="head_enabled" default="false"/>
+    <arg name="left_arm_enabled" default="true"/>
+    <arg name="left_hand_enabled" default="true"/>
+    <arg name="right_arm_enabled" default="false"/>
+    <arg name="right_hand_enabled" default="false"/>
+ </include>
+
+</launch>
