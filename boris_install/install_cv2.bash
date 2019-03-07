@@ -29,7 +29,7 @@ sudo apt-get install -y \
     cd opencv-2.4.13/ && \
     mkdir build && \
     cd build && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D BUILD_PYTHON_SUPPORT=ON -D WITH_XINE=ON -D WITH_TBB=ON .. && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D BUILD_opencv_python=ON -D WITH_XINE=ON -D WITH_TBB=ON -DINSTALL_PYTHON_EXAMPLES=ON -DBUILD_EXAMPLES=ON .. && \
     make -j$(nproc) && make install -j$(nproc) && \
     cd ../.. && \
     rm opencv-2.4.13.zip
