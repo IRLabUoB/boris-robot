@@ -14,3 +14,23 @@
     local-name: force_torque_tools
     uri: https://github.com/eaa3/force_torque_tools.git
     version: kinetic
+- git:
+    local-name: aruco_ros
+    uri: https://github.com/eaa3/aruco_ros.git
+    version: master
+- git:
+    local-name: trac_ik
+    uri: https://bitbucket.org/traclabs/trac_ik.git
+    version: master
+- git:
+    local-name: boris_rviz
+    uri: https://github.com/eaa3/boris_rviz.git
+    version: master
+- git:
+    local-name: jsk_common_msgs
+    uri: https://github.com/jsk-ros-pkg/jsk_common_msgs.git
+    version: master
+
+
+
+
