@@ -1,7 +1,7 @@
 controller_list:
   - name: /left_arm/joint_trajectory_controller
     type: FollowJointTrajectory
-    action_ns: follow_joint_trajectory2
+    action_ns: follow_joint_trajectory #follow_joint_trajectory2 (for impedance controller)
     default: true
     joints:
       - left_arm_0_joint
