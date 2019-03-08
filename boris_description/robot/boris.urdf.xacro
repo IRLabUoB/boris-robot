@@ -26,14 +26,15 @@
   </xacro:model_table>
 
   <!-- WORKBENCH -->
-  <xacro:model_table name="workbench"
+  <!-- <xacro:model_table name="workbench"
                     parent="world"
                     length="0.87"
                     width="1.77"
                     height="0.82"
                     plate_thickness="0.025">
-  <origin xyz="0.1 0.885 -0.33" rpy="0 0 0"/> <!-- -0.285 -->
-  </xacro:model_table>
+  <origin xyz="0.1 0.885 -0.33" rpy="0 0 0"/>
+  </xacro:model_table> -->
+   <!-- -0.285 -->
   <!-- WALL -->
   <xacro:model_wall name="wall" 
                     parent="world"
