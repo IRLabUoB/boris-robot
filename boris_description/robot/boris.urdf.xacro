@@ -84,7 +84,7 @@
   </link>
 
   <joint name="left_cable_guards_joint" type="fixed" >
-    <origin rpy="0 0 0" xyz="0 0.035 0.04" />
+    <origin rpy="0 0 0" xyz="0 -0.035 0.04" />
     <parent link="left_arm_7_link"/>
     <child link="left_cable_guards"/>
   </joint>
