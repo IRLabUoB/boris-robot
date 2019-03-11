@@ -2,7 +2,10 @@ moveit_setup_assistant_config:
   URDF:
     package: boris_description
     relative_path: robot/boris.urdf.xacro
+    xacro_args: --inorder use_mimic_tag:=true
   SRDF:
     relative_path: config/boris.srdf
   CONFIG:
-    generated_timestamp: 1431014953
+    author_name: Ermano Arruda
+    author_email: exa371@bham.ac.uk
+    generated_timestamp: 1552317264

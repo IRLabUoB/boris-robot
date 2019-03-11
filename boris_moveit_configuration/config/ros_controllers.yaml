@@ -1,0 +1,159 @@
+boris:
+# MoveIt-specific simulation settings
+  moveit_sim_hw_interface:
+    joint_model_group: controllers_initial_group_
+    joint_model_group_pose: controllers_initial_pose_
+# Settings for ros_control control loop
+  generic_hw_control_loop:
+    loop_hz: 300
+    cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+  hardware_interface:
+    joints:
+      - left_arm_0_joint
+      - left_arm_1_joint
+      - left_arm_2_joint
+      - left_arm_3_joint
+      - left_arm_4_joint
+      - left_arm_5_joint
+      - left_arm_6_joint
+      - left_hand_synergy_joint
+      - right_arm_0_joint
+      - right_arm_1_joint
+      - right_arm_2_joint
+      - right_arm_3_joint
+      - right_arm_4_joint
+      - right_arm_5_joint
+      - right_arm_6_joint
+      - right_hand_synergy_joint
+      - head_neck_pitch_joint
+      - head_neck_roll_joint
+      - head_neck_yaw_joint
+      - head_head_tilt_joint
+      - head_eyes_tilt_joint
+      - head_left_eye_joint
+      - head_right_eye_joint
+    sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+  controller_list:
+    - name: right_hand_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        right_hand_synergy_joint
+    - name: left_hand_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        left_hand_synergy_joint
+    - name: right_arm_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - right_arm_0_joint
+        - right_arm_1_joint
+        - right_arm_2_joint
+        - right_arm_3_joint
+        - right_arm_4_joint
+        - right_arm_5_joint
+        - right_arm_6_joint
+    - name: right_hand_arm_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - right_arm_0_joint
+        - right_arm_1_joint
+        - right_arm_2_joint
+        - right_arm_3_joint
+        - right_arm_4_joint
+        - right_arm_5_joint
+        - right_arm_6_joint
+    - name: head_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - head_neck_pitch_joint
+        - head_neck_roll_joint
+        - head_neck_yaw_joint
+        - head_head_tilt_joint
+        - head_eyes_tilt_joint
+        - head_left_eye_joint
+        - head_right_eye_joint
+    - name: left_arm_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - left_arm_0_joint
+        - left_arm_1_joint
+        - left_arm_2_joint
+        - left_arm_3_joint
+        - left_arm_4_joint
+        - left_arm_5_joint
+        - left_arm_6_joint
+    - name: left_hand_arm_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - left_arm_0_joint
+        - left_arm_1_joint
+        - left_arm_2_joint
+        - left_arm_3_joint
+        - left_arm_4_joint
+        - left_arm_5_joint
+        - left_arm_6_joint
+    - name: full_robot_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - left_arm_0_joint
+        - left_arm_1_joint
+        - left_arm_2_joint
+        - left_arm_3_joint
+        - left_arm_4_joint
+        - left_arm_5_joint
+        - left_arm_6_joint
+        - right_arm_0_joint
+        - right_arm_1_joint
+        - right_arm_2_joint
+        - right_arm_3_joint
+        - right_arm_4_joint
+        - right_arm_5_joint
+        - right_arm_6_joint
+        - head_neck_pitch_joint
+        - head_neck_roll_joint
+        - head_neck_yaw_joint
+        - head_head_tilt_joint
+        - head_eyes_tilt_joint
+        - head_left_eye_joint
+        - head_right_eye_joint
+    - name: dual_hand_arm_controller
+      action_ns: follow_joint_trajectory
+      default: True
+      type: FollowJointTrajectory
+      joints:
+        - left_arm_0_joint
+        - left_arm_1_joint
+        - left_arm_2_joint
+        - left_arm_3_joint
+        - left_arm_4_joint
+        - left_arm_5_joint
+        - left_arm_6_joint
+        - right_arm_0_joint
+        - right_arm_1_joint
+        - right_arm_2_joint
+        - right_arm_3_joint
+        - right_arm_4_joint
+        - right_arm_5_joint
+        - right_arm_6_joint
