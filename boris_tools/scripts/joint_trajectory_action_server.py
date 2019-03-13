@@ -38,7 +38,7 @@ from trajectory_msgs.msg import (
     JointTrajectoryPoint,
 )
 
-def start_server(limb, rate, mode, valid_limbs):
+def start_server(limb, rate, mode, valid_limbs, sim = False):
     rospy.loginfo("Initializing node... ")
     rospy.init_node("sdk_{0}_joint_trajectory_action_server{1}".format(
                         mode, "" if limb == 'all_limbs' else "_" + limb,))
@@ -61,7 +61,7 @@ def start_server(limb, rate, mode, valid_limbs):
             jtas.append(JointTrajectoryActionServer(current_limb, dyn_cfg_srv,
                                                     rate, mode))
     else:
-        jtas.append(JointTrajectoryActionServer(limb, dyn_cfg_srv, rate, mode))
+        jtas.append(JointTrajectoryActionServer(limb, dyn_cfg_srv, rate, mode, sim))
 
 
     def cleanup():
@@ -99,8 +99,12 @@ def main():
         choices=['joint_impedance'],
         help="control mode for trajectory execution"
     )
+    parser.add_argument('--sim', dest='sim', action='store_true',
+                         help="Specify whether this is a simulated robot")
+    parser.set_defaults(sim=False)
+
     args = parser.parse_args(rospy.myargv()[1:])
-    start_server(args.limb, args.rate, args.mode, valid_limbs)
+    start_server(args.limb, args.rate, args.mode, valid_limbs, args.sim)
 
 
 if __name__ == "__main__":

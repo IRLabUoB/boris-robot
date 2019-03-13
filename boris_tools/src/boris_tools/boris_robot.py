@@ -211,6 +211,26 @@ class BorisRobot(object):
         """
         return self._joint_names_map.get(limb_name,self._joint_names)
 
+    def goto_joint_angles(self, limb_name, joint_values):
+        # disabling usage of this function for arms for safety reasons for now
+        assert limb_name != "left_arm" and limb_name != "right_arm"
+
+        joint_names = self._joint_names_map[limb_name]
+
+        
+        trajectory = JointTrajectory()
+        trajectory.joint_names = joint_names
+
+        point = JointTrajectoryPoint()
+        point.positions = joint_values
+        point.velocities = [0.0]*len(joint_values)
+        point.accelerations = [0.0]*len(joint_values)
+        point.time_from_start = rospy.Duration(0.001)
+
+        trajectory.points.append(point)
+
+        self.follow_trajectory(limb_name, trajectory, first_waypoint_moveit = False)
+
 
     def goto_with_moveit(self, limb_name, joint_values):
 
@@ -220,7 +240,7 @@ class BorisRobot(object):
             # Go to first waypoint
             self._moveit_wrapper.set_joint_value_target(limb_name, joint_values)
             plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
-            self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan)
+            self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan, wait=True)
 
     def get_moveit_plan(self, limb_name, joint_values):
 

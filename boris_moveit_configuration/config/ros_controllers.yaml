@@ -45,13 +45,13 @@ boris:
       default: True
       type: FollowJointTrajectory
       joints:
-        right_hand_synergy_joint
+        []
     - name: left_hand_controller
       action_ns: follow_joint_trajectory
       default: True
       type: FollowJointTrajectory
       joints:
-        left_hand_synergy_joint
+        []
     - name: right_arm_controller
       action_ns: follow_joint_trajectory
       default: True

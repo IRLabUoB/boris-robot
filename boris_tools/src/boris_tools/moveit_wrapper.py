@@ -49,6 +49,12 @@ class MoveitWrapper(object):
 
         self._ready = True
 
+    def scene(self):
+        return self._scene
+    
+    def robot(self):
+        return self._robot
+
     def is_ready(self):
         """
         Return whether or not this wrapper obeject is ready to be used
