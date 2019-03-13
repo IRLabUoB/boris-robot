@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .joint_trajectory_action import JointTrajectoryActionServer
+from .utils import MinJerkTrajHelper

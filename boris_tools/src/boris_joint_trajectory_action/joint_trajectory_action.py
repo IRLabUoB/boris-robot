@@ -51,7 +51,7 @@ from boris_tools.boris_robot import BorisRobot
 
 class JointTrajectoryActionServer(object):
     def __init__(self, limb, reconfig_server, rate=100.0,
-                 mode='joint_impedance', interpolation='minjerk'):
+                 mode='joint_impedance', sim = False, interpolation='minjerk'):
 
         self._mode = mode
         self._dyn = reconfig_server
@@ -64,6 +64,9 @@ class JointTrajectoryActionServer(object):
             auto_start=False)
         self._action_name = rospy.get_name()
         self._limb = BorisRobot()
+
+        
+
         self._name = limb
         self._interpolation = interpolation
 
@@ -84,6 +87,9 @@ class JointTrajectoryActionServer(object):
         self._path_thresh = dict()
 
         self._limb.set_control_mode(mode=self._mode)
+        if sim:
+            rospy.loginfo("Setting gains for simulated robot")
+            self._limb.set_joint_impedance(np.array([2000,2000,2000,2000,2000,2000,2000]),np.array([100,100,100,100,100,100,100]))
 
         # Create our spline coefficients
         self._coeff = [None] * len(self._limb.joint_names(self._name))
