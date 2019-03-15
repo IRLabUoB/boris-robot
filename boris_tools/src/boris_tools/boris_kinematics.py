@@ -82,6 +82,15 @@ class boris_kinematics(object):
         # return np.array(result)
         return True if result is not None else False
 
+    def trac_ik_inverse_kinematics2(self, pos, quat, seed=None):
+        if seed is None:
+            seed = self._default_seed
+        result = self.trac_ik_solver.get_ik(seed,
+                                            pos[0], pos[1], pos[2],
+                                            quat[0], quat[1], quat[2], quat[3])
+        # 
+        return np.array(result) if result is not None else None
+
     def kdl_inverse_kinematics(self, pos, quat, seed=None):
         pos = PyKDL.Vector(pos[0], pos[1], pos[2])
         rot = PyKDL.Rotation()
@@ -129,6 +138,35 @@ class boris_kinematics(object):
         else:
             # return None
             return False
+
+    def kdl_inverse_kinematics_jl2(self, pos, quat, seed=None, min_joints=None, max_joints=None):
+        pos = PyKDL.Vector(pos[0], pos[1], pos[2])
+        rot = PyKDL.Rotation()
+        rot = rot.Quaternion(quat[0], quat[1], quat[2], quat[3])
+        goal_pose = PyKDL.Frame(rot, pos)
+
+        if min_joints is None:
+            min_joints = self.joint_limits_lower
+        if max_joints is None:
+            max_joints = self.joint_limits_upper
+        mins_kdl = joint_list_to_kdl(min_joints)
+        maxs_kdl = joint_list_to_kdl(max_joints)
+
+        ik_jl_p_kdl = PyKDL.ChainIkSolverPos_NR_JL(self._arm_chain, mins_kdl, maxs_kdl,
+                                                   self._fk_p_kdl, self._ik_v_kdl)
+
+        seed_array = joint_list_to_kdl(self._default_seed)
+        if seed != None:
+            seed_array = joint_list_to_kdl(seed)
+
+        result_angles = PyKDL.JntArray(self._num_jnts)
+        if ik_jl_p_kdl.CartToJnt(seed_array, goal_pose, result_angles) >= 0:
+            result = np.array(list(result_angles))
+            # return result
+            return result
+        else:
+            # return None
+            return None
 
 if __name__ == '__main__':
 

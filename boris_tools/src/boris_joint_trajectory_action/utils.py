@@ -39,11 +39,13 @@ class MinJerkTrajHelper(object):
 
             #Calculate percentage of time passed in this interval
             if idx >= self._num_points:
-                cmd_time = now_from_start - self._pnt_times[0]
+                cmd_time = now_from_start - self._pnt_times[-1]#now_from_start - self._pnt_times[0]
                 t = 1.0
             elif idx >= 0:
-                cmd_time = now_from_start 
-                t = cmd_time / (self._pnt_times[-1] - self._pnt_times[0])
+                # cmd_time = now_from_start 
+                # t = cmd_time / (self._pnt_times[-1] - self._pnt_times[0])
+                cmd_time = (now_from_start - self._pnt_times[idx-1])
+                t = cmd_time / (self._pnt_times[idx] - self._pnt_times[idx-1])
             else:
                 cmd_time = 0
                 t = 0

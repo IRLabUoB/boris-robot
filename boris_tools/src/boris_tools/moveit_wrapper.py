@@ -3,7 +3,9 @@ import rospy
 import moveit_commander
 import geometry_msgs.msg
 import moveit_msgs.msg
-
+from moveit_msgs.msg import RobotState
+from sensor_msgs.msg import JointState
+from std_msgs.msg import Header
 import sys
 
 class MoveitWrapper(object):
@@ -213,6 +215,14 @@ class MoveitWrapper(object):
 
         return plan
 
+    def display_plan(self, group_name, plan):
+        display_trajectory = moveit_msgs.msg.DisplayTrajectory()
+
+        display_trajectory.trajectory_start = self._robot.get_current_state()
+        display_trajectory.trajectory.append(plan)
+        self._display_trajectory_publisher.publish(display_trajectory)
+
+
     def execute(self, group_name, plan_msg, wait=True):
 
         """
@@ -265,11 +275,24 @@ class MoveitWrapper(object):
         return plan, fraction
         
 
+    def get_group(self, group_name):
 
+        return self._move_groups[group_name]
         
 
 
+    def set_start_state(self, group_name, joint_names, joint_positions):
+        group = self.get_group(group_name)
+
+        joint_state = JointState()
+        joint_state.header = Header()
+        joint_state.header.stamp = rospy.Time.now()
+        joint_state.name = joint_names
+        joint_state.position = joint_positions
+        moveit_robot_state = RobotState()
+        moveit_robot_state.joint_state = joint_state
         
+        group.set_start_state(moveit_robot_state)
 
 
         

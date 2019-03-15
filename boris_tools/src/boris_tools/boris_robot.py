@@ -103,6 +103,8 @@ class BorisRobot(object):
         self._joint_stiffness = np.array([250,250,200,100,60,50,10])
         self._joint_damping = np.array([25,25,25,25,10,0.01,0.001])
 
+        self._boris_kinematics = boris_kinematics()
+
         self._ready = False
 
     def is_enabled(self):
@@ -232,6 +234,27 @@ class BorisRobot(object):
         self.follow_trajectory(limb_name, trajectory, first_waypoint_moveit = False)
 
 
+    def compute_cartesian_path_moveit(self, limb_name, waypoints):
+
+        if self._has_moveit:
+            plan, fraction = self._moveit_wrapper.compute_cartesian_path(limb_name, waypoints)
+            self._moveit_wrapper.display_plan(limb_name, plan)
+            rospy.loginfo("Cartesian path fraction %f"%(fraction,))
+            return plan, fraction
+        else:
+            return None
+            
+    def goto_pose_moveit(self, limb_name, pose_target):
+
+        assert limb_name in ["left_hand_arm","right_hand_arm"]
+
+        if self._has_moveit:
+
+            # Go to first waypoint
+            self._moveit_wrapper.set_pose_target(group_name=limb_name, pose_target=pose_target)
+            plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
+            self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan, wait=True)
+
     def goto_with_moveit(self, limb_name, joint_values):
 
 
@@ -249,6 +272,25 @@ class BorisRobot(object):
 
             # Go to first waypoint
             self._moveit_wrapper.set_joint_value_target(limb_name, joint_values)
+            plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
+
+            return plan
+        else:
+            return None
+
+    def execute_moveit_plan(self, limb_name, plan):
+
+
+        if self._has_moveit:
+
+            # Go to first waypoint
+            self._moveit_wrapper.execute(group_name=limb_name, plan_msg=plan, wait=True)
+
+
+    def get_moveit_cartesian_plan(self, limb_name, pose_target):
+
+        if self._has_moveit:
+            self._moveit_wrapper.set_pose_target(group_name=limb_name, pose_target=pose_target)
             plan = self._moveit_wrapper.plan(group_name=limb_name, display=True)
 
             return plan
@@ -414,6 +456,8 @@ class BorisRobot(object):
     def set_cart_impedance(self, stiffness, damping):
         pass
 
-
+    def inverse_kinematics(self, pos, quat):
+        #self._boris_kinematics.kdl_inverse_kinematics_jl2(pos, quat)
+        return self._boris_kinematics.trac_ik_inverse_kinematics2(pos,quat)
 
     #def end_effector(self)
