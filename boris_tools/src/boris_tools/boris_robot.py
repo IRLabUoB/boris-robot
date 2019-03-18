@@ -216,8 +216,12 @@ class BorisRobot(object):
     def goto_joint_angles(self, limb_name, joint_values):
         # disabling usage of this function for arms for safety reasons for now
         assert limb_name != "left_arm" and limb_name != "right_arm"
-
-        joint_names = self._joint_names_map[limb_name]
+        
+        
+        if limb_name == "left_hand":
+            joint_names = ["left_hand_synergy_joint"]
+        else:
+            joint_names = self._joint_names_map[limb_name]
 
         
         trajectory = JointTrajectory()
@@ -234,10 +238,10 @@ class BorisRobot(object):
         self.follow_trajectory(limb_name, trajectory, first_waypoint_moveit = False)
 
 
-    def compute_cartesian_path_moveit(self, limb_name, waypoints):
+    def compute_cartesian_path_moveit(self, limb_name, waypoints, eef_step = 0.01, jump_threshold = 0.0):
 
         if self._has_moveit:
-            plan, fraction = self._moveit_wrapper.compute_cartesian_path(limb_name, waypoints)
+            plan, fraction = self._moveit_wrapper.compute_cartesian_path(limb_name, waypoints, eef_step, jump_threshold)
             self._moveit_wrapper.display_plan(limb_name, plan)
             rospy.loginfo("Cartesian path fraction %f"%(fraction,))
             return plan, fraction
