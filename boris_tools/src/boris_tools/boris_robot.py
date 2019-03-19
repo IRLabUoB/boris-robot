@@ -4,6 +4,7 @@ import warnings
 
 import rospy
 from sensor_msgs.msg import JointState
+from geometry_msgs.msg import WrenchStamped
 
 from trajectory_msgs.msg import (
     JointTrajectoryPoint,
@@ -55,6 +56,8 @@ class BorisRobot(object):
         self._joint_names = joint_names
         self._joint_names_map["all"] = joint_names
 
+        self._wrench = WrenchStamped()
+
         joint_state_topic = "/joint_states"
         self._joint_state_sub = rospy.Subscriber(
                                         joint_state_topic,
@@ -62,6 +65,14 @@ class BorisRobot(object):
                                         self._on_joint_states,
                                         queue_size=1,
                                         tcp_nodelay=True)
+
+        self._ft_sub = rospy.Subscriber(
+                                        "/left_arm/ft_sensor",
+                                        WrenchStamped,
+                                        self._on_ft_reading,
+                                        queue_size=1,
+                                        tcp_nodelay=True)
+        
 
         queue_size = None
         with warnings.catch_warnings():
@@ -116,6 +127,10 @@ class BorisRobot(object):
             rospy.sleep(0.005)
             rospy.logwarn("Robot not enabled yet, waiting...")
 
+    def _on_ft_reading(self, msg):
+
+        self._wrench = msg
+
     def _on_joint_states(self, msg):
         for idx, name in enumerate(msg.name):
             if name in self._joint_names:
@@ -129,6 +144,10 @@ class BorisRobot(object):
         # joint_efforts = np.array(joint_state_msg.effort)
         # joint_names = joint_state_msg.names
     
+    def wrench(self):
+
+        return deepcopy(self._wrench)
+
     def joint_angles(self):
         """
         Return all joint angles.
@@ -465,3 +484,8 @@ class BorisRobot(object):
         return self._boris_kinematics.trac_ik_inverse_kinematics2(pos,quat)
 
     #def end_effector(self)
+
+
+    def set_vel_accel_scaling(self, group_name, velocity_scale = 0.25, acceleration_scale = 0.25):
+        self._moveit_wrapper.get_group(group_name).set_max_velocity_scaling_factor(velocity_scale)
+        self._moveit_wrapper.get_group(group_name).set_max_acceleration_scaling_factor(acceleration_scale)

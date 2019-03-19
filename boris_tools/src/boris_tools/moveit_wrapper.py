@@ -249,7 +249,7 @@ class MoveitWrapper(object):
         return ret
 
 
-    def compute_cartesian_path(self, group_name, waypoints):
+    def compute_cartesian_path(self, group_name, waypoints, eef_step = 0.01, jump_threshold = 0.0):
 
         """
         Compute a sequence of waypoints that make the end-effector move in straight line segments that follow the poses specified as waypoints. 
@@ -269,8 +269,8 @@ class MoveitWrapper(object):
 
         (plan, fraction) = self._move_groups[group_name].compute_cartesian_path(
                                 waypoints,   # waypoints to follow
-                                0.01,        # eef_step
-                                0.0)         # jump_threshold
+                                eef_step,        # eef_step
+                                jump_threshold)         # jump_threshold
 
         return plan, fraction
         
