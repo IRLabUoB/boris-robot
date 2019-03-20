@@ -61,7 +61,7 @@ def main():
 
     rospy.init_node("network_ft_sensor_node")
 
-    sensor_rate = rospy.get_param("rate",1000)
+    sensor_rate = rospy.get_param("rate",500)
     ft_topic_raw = rospy.get_param("ft_topic_raw","left_arm/ft_sensor_raw")
     ft_topic = rospy.get_param("ft_topic","left_arm/ft_sensor")
     ft_topic_pred = rospy.get_param("ft_topic_pred","left_arm/ft_sensor_pred")

@@ -40,7 +40,7 @@ def main():
     tf_buffer = tf2_ros.Buffer()
     listener = tf2_ros.TransformListener(tf_buffer)
 
-    sensor_rate = rospy.get_param("rate",100)
+    sensor_rate = rospy.get_param("rate",500)
     imu_topic = rospy.get_param("imu_topic","left_arm/imu_sensor")
     frame_id = rospy.get_param("frame_id","left_ft_sensor")
     print frame_id
