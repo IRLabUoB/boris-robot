@@ -10,9 +10,9 @@ from aml_calib.hand_eye_calib import HandEyeCalib
 
 import sys
 
-NODE_NAME = 'boris_eye_calibrator'
+NODE_NAME = 'boris_external_eye_calibrator'
 
-class HandEyeCalibrator(object):
+class ExternalEyeCalibrator(object):
     def __init__(self):
     
         self._camera_frame = rospy.get_param('%s/camera_frame'%(NODE_NAME,),'camera_rgb_optical_frame')
@@ -20,8 +20,8 @@ class HandEyeCalibrator(object):
         self._robot_base_frame = rospy.get_param('%s/robot_base_frame'%(NODE_NAME,),'world')
         self._ee_frame = rospy.get_param('%s/ee_frame'%(NODE_NAME,),'left_arm_7_link')
 
-        self._save_calib_file = rospy.get_param('%s/save_calib_file'%(NODE_NAME,),'hand_eye_calib_data.npy')
-        self._load_calib_file = rospy.get_param('%s/load_calib_file'%(NODE_NAME,),'hand_eye_calib_data.npy')
+        self._save_calib_file = rospy.get_param('%s/save_calib_file'%(NODE_NAME,),'external_eye_calib_data.npy')
+        self._load_calib_file = rospy.get_param('%s/load_calib_file'%(NODE_NAME,),'external_eye_calib_data.npy')
         self._calib_from_file = rospy.get_param('%s/calibrate_from_file'%(NODE_NAME,),False)
 
         rospy.loginfo("Camera frame: %s"%(self._camera_frame,))

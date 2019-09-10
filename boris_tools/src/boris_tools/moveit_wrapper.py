@@ -6,7 +6,7 @@ import moveit_msgs.msg
 from moveit_msgs.msg import RobotState
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Header
-import sys
+import sys, warnings
 
 class MoveitWrapper(object):
 
@@ -15,9 +15,11 @@ class MoveitWrapper(object):
 
         self._ready = False
 
-        self._display_trajectory_publisher = rospy.Publisher(
-                                    '/move_group/display_planned_path',
-                                    moveit_msgs.msg.DisplayTrajectory)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self._display_trajectory_publisher = rospy.Publisher(
+                                        '/move_group/display_planned_path',
+                                        moveit_msgs.msg.DisplayTrajectory)
 
 
     def init_moveit_commander(self):

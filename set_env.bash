@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # This should be the ip address for this computer
-host_ip="192.168.0.52"
+host_ip="192.168.0.50"
 
 # This should be the ip address for the computer who is controlling the robot
 boris_host_ip="192.168.0.52"

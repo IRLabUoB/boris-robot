@@ -1,7 +1,7 @@
 <launch>
 
     <arg name="side"              default="left"/>
-    <arg name="rate"      default="1900"/>
+    <arg name="rate"      default="500"/>
     <arg name="host_ip"      default="10.0.11.163"/>    <!-- in m -->
     
     <node pkg="boris_tools" type="mock_imu_node.py" name="$(arg side)_boris_mock_imu" output="screen">

@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="camera_side" default="right"/>
+    <arg name="side" default="right"/>
     <arg name="markerId"        default="26"/>
     <arg name="markerSize"      default="0.14"/>    <!-- in m -->
     <arg name="eye"             default="left"/>
@@ -10,9 +10,9 @@
     <arg name="corner_refinement" default="LINES" /> <!-- NONE, HARRIS, LINES, SUBPIX -->
 
 
-    <node pkg="aruco_ros" type="single" name="aruco_single">
-        <remap from="/camera_info" to="/$(arg camera_side)_camera/rgb/camera_info" /> <!-- "/stereo/$(arg eye)/camera_info -->
-        <remap from="/image" to="/$(arg camera_side)_camera/rgb/image_rect_color"/>   <!--"/stereo/$(arg eye)/image_rect_color"-->
+    <node ns="$(arg side)" pkg="aruco_ros" type="single" name="aruco_single">
+        <remap from="/camera_info" to="/$(arg side)_camera/rgb/camera_info" /> <!-- "/stereo/$(arg eye)/camera_info -->
+        <remap from="/image" to="/$(arg side)_camera/rgb/image_rect_color"/>   <!--"/stereo/$(arg eye)/image_rect_color"-->
         <param name="image_is_rectified" value="True"/>
         <param name="marker_size"        value="$(arg markerSize)"/>
         <param name="marker_id"          value="$(arg markerId)"/>

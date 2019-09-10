@@ -3,7 +3,7 @@
   <arg name="camera" default="left_camera" />
   <arg name="rgb_frame_id"   default="$(arg camera)_rgb_optical_frame" />
   <arg name="depth_frame_id" default="$(arg camera)_depth_optical_frame" />
-  <arg name="device_id" default="#1" />
+  <arg name="device_id" default="#2" />
 
 
  <!-- Include official launch file and specify camera_info urls -->

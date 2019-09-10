@@ -71,7 +71,7 @@ class boris_kinematics(object):
 
         pos = end_frame.p
         quat = PyKDL.Rotation(end_frame.M).GetQuaternion()
-        return np.array([pos[0], pos[1], pos[2], quat[0], quat[1], quat[2], quat[3]])
+        return np.array([pos[0], pos[1], pos[2]]), np.array([quat[0], quat[1], quat[2], quat[3]])
 
     def trac_ik_inverse_kinematics(self, pos, quat, seed=None):
         if seed is None:
@@ -172,20 +172,20 @@ if __name__ == '__main__':
 
     kin = boris_kinematics()
     joint_pos = [-0.3723750412464142, 0.02747996523976326, -0.7221865057945251, -1.69843590259552, 0.11076358705759048, 0.5450965166091919, 0.45358774065971375] # home pos
-    pose = kin.forward_kinematics(joint_pos) # pos & quat
+    position, quaternion = kin.forward_kinematics(joint_pos) # pos & quat
 
     print ''
     print '*** IK solution test ***'
     seed = None
     for i in range(5):
-        pose[0] += 0.01
+        position[0] += 0.01
 
-        has_solution = kin.kdl_inverse_kinematics(pose[0:3], pose[3:7], seed)
+        has_solution = kin.kdl_inverse_kinematics(position, quaternion, seed)
         print 'kdl w/o jl:', has_solution
 
-        has_solution = kin.kdl_inverse_kinematics_jl(pose[0:3], pose[3:7], seed)
+        has_solution = kin.kdl_inverse_kinematics_jl(position, quaternion, seed)
         print 'kdl w/  jl:', has_solution
 
-        has_solution = kin.trac_ik_inverse_kinematics(pose[0:3], pose[3:7], seed)
+        has_solution = kin.trac_ik_inverse_kinematics(position, quaternion, seed)
         print 'trac ik   :', has_solution
         print ''

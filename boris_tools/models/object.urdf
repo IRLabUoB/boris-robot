@@ -4,7 +4,7 @@
   <link name="object">
     <inertial>
       <origin xyz="0.0 0.0 0.0" />
-      <mass value="0.1" />
+      <mass value="0.5" />
       <inertia  ixx="1" ixy="0.0"  ixz="0.0"  iyy="1"  iyz="0.0"  izz="1" />
     </inertial>
 

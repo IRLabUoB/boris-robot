@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="my_rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find boris_description)/launch/rviz_config.rviz" output="screen"/>
+
+</launch>

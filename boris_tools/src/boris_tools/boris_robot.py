@@ -114,7 +114,8 @@ class BorisRobot(object):
         self._joint_stiffness = np.array([250,250,200,100,60,50,10])
         self._joint_damping = np.array([25,25,25,25,10,0.01,0.001])
 
-        self._boris_kinematics = boris_kinematics()
+        self._boris_kin_left_arm_hand = boris_kinematics(tip_link="left_hand_palm_link")
+        self._boris_kin_left_last_link = boris_kinematics(tip_link="left_arm_7_link")
 
         self._ready = False
 
@@ -232,7 +233,7 @@ class BorisRobot(object):
         """
         return self._joint_names_map.get(limb_name,self._joint_names)
 
-    def goto_joint_angles(self, limb_name, joint_values):
+    def goto_joint_angles(self, limb_name, joint_values, time_from_start = 0.001):
         # disabling usage of this function for arms for safety reasons for now
         assert limb_name != "left_arm" and limb_name != "right_arm"
         
@@ -250,7 +251,7 @@ class BorisRobot(object):
         point.positions = joint_values
         point.velocities = [0.0]*len(joint_values)
         point.accelerations = [0.0]*len(joint_values)
-        point.time_from_start = rospy.Duration(0.001)
+        point.time_from_start = rospy.Duration(time_from_start)
 
         trajectory.points.append(point)
 
@@ -481,9 +482,13 @@ class BorisRobot(object):
 
     def inverse_kinematics(self, pos, quat):
         #self._boris_kinematics.kdl_inverse_kinematics_jl2(pos, quat)
-        return self._boris_kinematics.trac_ik_inverse_kinematics2(pos,quat)
+        return self._boris_kin_left_last_link.trac_ik_inverse_kinematics2(pos,quat)
 
-    #def end_effector(self)
+    def left_palm_pose(self, joint_angles = None):
+        if joint_angles is None:
+            joint_angles = self.angles("left_arm")
+
+        return self._boris_kin_left_arm_hand.forward_kinematics(joint_angles)
 
 
     def set_vel_accel_scaling(self, group_name, velocity_scale = 0.25, acceleration_scale = 0.25):
