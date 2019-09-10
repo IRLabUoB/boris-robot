@@ -6,8 +6,6 @@ from geometry_msgs.msg import Pose, PoseStamped
 import tf
 from tf import TransformListener
 
-from aml_calib.hand_eye_calib import HandEyeCalib
-
 import sys
 
 NODE_NAME = 'boris_external_eye_calibrator'
@@ -22,7 +20,7 @@ class ExternalEyeCalibrator(object):
 
         self._save_calib_file = rospy.get_param('%s/save_calib_file'%(NODE_NAME,),'external_eye_calib_data.npy')
         self._load_calib_file = rospy.get_param('%s/load_calib_file'%(NODE_NAME,),'external_eye_calib_data.npy')
-        self._calib_from_file = rospy.get_param('%s/calibrate_from_file'%(NODE_NAME,),False)
+        self._calib_from_file = rospy.get_param('%s/calibrate_from_file'%(NODE_NAME,),True)
 
         rospy.loginfo("Camera frame: %s"%(self._camera_frame,))
         rospy.loginfo("Marker frame: %s"%(self._marker_frame,))
@@ -37,7 +35,6 @@ class ExternalEyeCalibrator(object):
 
         self._camera_base_transform = self.to_transform_matrix(self._camera_base_p, self._camera_base_q)
 
-        self._calib = HandEyeCalib()
 
         self._br = tf.TransformBroadcaster()
         self._tf = TransformListener()
@@ -51,6 +48,13 @@ class ExternalEyeCalibrator(object):
         self._br.sendTransform((pt[0], pt[1], pt[2]), tf.transformations.quaternion_from_matrix(rot), now, frame_name,
                               'base')
         print("should have done it!")
+
+    def broadcast_frame2(self, p, q, frame_name="marker"):
+
+        now = rospy.Time.now()
+        self._br.sendTransform(p, q, now, frame_name,
+                              'world')
+        # print("should have done it!")
 
 
     def get_transform(self, base_frame, source_frame):
@@ -66,7 +70,8 @@ class ExternalEyeCalibrator(object):
 
                 time = self._tf.getLatestCommonTime(source_frame, base_frame)
             except:
-                rospy.loginfo("Failed to get common time between %s and %s. Trying again..."%(source_frame,base_frame,))
+                pass
+                # rospy.loginfo("Failed to get common time between %s and %s. Trying again..."%(source_frame,base_frame,))
 
         t = None
         q = None
@@ -100,25 +105,72 @@ class ExternalEyeCalibrator(object):
 
         return np.array(transform[:3,3])
 
+    def to_position_quaternion(self, transform):
+        p = tf.transformations.translation_from_matrix(transform)
+        q = tf.transformations.quaternion_from_matrix(transform)
+
+
+        return p, q
+
 
     def calibrate_from_file(self):
 
+        calib_data = np.load('external_eye_calibration.npy').item()
 
-        calib_data = np.load(self._load_calib_file).item()
+        transform_dict = calib_data['external_eye_transform']
+        p = transform_dict['p']
+        q = transform_dict['q']
 
-        camera_poses = calib_data['camera_poses']
-        ee_poses = calib_data['ee_poses']
+        r = rospy.Rate(100)
+        while not rospy.is_shutdown():
 
-        for i in range(len(camera_poses)):
-            self._calib.add_measurement(ee_poses[i], camera_poses[i])
+            self.broadcast_frame2(p,q, "external_camera_link")
 
-        hand_eye_transform = self._calib.calibrate()
-        hand_eye_transform = np.matmul(hand_eye_transform,np.linalg.inv(self._camera_base_transform))
-        print 'Hand-eye transform: ', hand_eye_transform
-        translation = self.to_translation(hand_eye_transform)
-        euler = self.to_euler(hand_eye_transform)
-        print "XYZ:", translation
-        print "RPY: ", euler
+            r.sleep()
+
+
+
+    def calibrate(self):
+
+        r = rospy.Rate(10)
+        p = None
+        q = None
+        while not rospy.is_shutdown():
+        
+            marker_t, marker_q, _ = self.get_transform("world", "marker26_2")
+            camera_t, camera_q, _ = self.get_transform("marker26", "external_camera_link")
+
+            # print("Marker pose: ", marker_t, marker_q)
+            # print("Camera pose: ", camera_t, camera_q)
+
+            marker_transform = self.to_transform_matrix(marker_t, marker_q)
+            camera_transform = self.to_transform_matrix(camera_t,camera_q)
+            
+            external_eye_transform = np.matmul(marker_transform,camera_transform)
+
+            p, q = self.to_position_quaternion(external_eye_transform)
+            rpy = self.to_euler(external_eye_transform)
+            # print(p, q)
+            self.broadcast_frame2(p,q, "external_camera_link")
+
+
+
+            
+
+            r.sleep()
+
+
+        calib_data = {'external_eye_transform':  {'p' : p, 'q' : q, 'rpy': rpy}}
+        np.save('external_eye_calibration.npy', calib_data)
+        #         camera_transform = self.to_transform_matrix(camera_t,camera_q)
+        #         ee_transform = self.to_transform_matrix(ee_t, ee_q)
+        # hand_eye_transform = np.matmul(hand_eye_transform,np.linalg.inv(self._camera_base_transform))
+        # print "Found Transform: ", hand_eye_transform
+
+        # translation = self.to_translation(hand_eye_transform)
+        # euler = self.to_euler(hand_eye_transform)
+        # print "XYZ:", translation
+        # print "RPY: ", euler
 
 
         # calib_data = {'hand_eye_transform':  {'matrix': hand_eye_transform,
@@ -126,73 +178,11 @@ class ExternalEyeCalibrator(object):
         #                                       'rpy': euler},
         #               'camera_poses': self._calib._camera_poses,
         #                'ee_poses': self._calib._ee_poses}
+
         # np.save('hand_eye_calibration_right.npy', calib_data)
-
-    def calibrate(self):
-        from getch import getch
-        calibrate = False
-        print("Press enter to record to next. Add/Remove/Calibrate/Help? (a/r/c/h)")
-        while not calibrate:
+        #     np.save(self._save_calib_file,calib_data)
             
-            r = getch()
-
-            
-
-            if r == 'a':
-                camera_t, camera_q, _ = self.get_transform(self._camera_frame, self._marker_frame)
-                ee_t, ee_q, _ = self.get_transform(self._robot_base_frame, self._ee_frame)
-
-                camera_transform = self.to_transform_matrix(camera_t,camera_q)
-                ee_transform = self.to_transform_matrix(ee_t, ee_q)
-                print "------------%d Poses---------------"%(len(self._calib._ee_poses),)
-                print "Camera transform: ", camera_t, camera_q
-                print "Hand transform: ", ee_t, ee_q
-                print "---------------------------------"
-                self._calib.add_measurement(ee_transform, camera_transform)
-                print 'Transform has been added for calibration'
-            elif r == 'c':
-                calibrate = True
-            elif r == 'h':
-                print("Press enter to record to next. Add/Remove/Calibrate? (a/r/c/h)")
-            elif r == 'r':
-                if len(self._calib._ee_poses) > 0:
-                    del self._calib._ee_poses[-1]
-                    del self._calib._camera_poses[-1]
-                    print("Removed last pose")
-                else:
-                    print("Pose list already empty.")
-
-
-
-            elif r in ['\x1b', '\x03']:
-                rospy.signal_shutdown("Acquisition finished.")
-                break
-
-        if calibrate:
-            hand_eye_transform = self._calib.calibrate()
-
-            
-
-
-            hand_eye_transform = np.matmul(hand_eye_transform,np.linalg.inv(self._camera_base_transform))
-            print "Found Transform: ", hand_eye_transform
-
-            translation = self.to_translation(hand_eye_transform)
-            euler = self.to_euler(hand_eye_transform)
-            print "XYZ:", translation
-            print "RPY: ", euler
-
-
-            calib_data = {'hand_eye_transform':  {'matrix': hand_eye_transform,
-                                              'xyz': translation,
-                                              'rpy': euler},
-                      'camera_poses': self._calib._camera_poses,
-                       'ee_poses': self._calib._ee_poses}
-
-            np.save('hand_eye_calibration_right.npy', calib_data)
-            np.save(self._save_calib_file,calib_data)
-        else:
-            print("Quiting. Bye!")
+        # print("Quiting. Bye!")
 
 
 
@@ -201,7 +191,7 @@ class ExternalEyeCalibrator(object):
 
 
 def main():
-    calib = HandEyeCalibrator()
+    calib = ExternalEyeCalibrator()
 
     if calib._calib_from_file:
         calib.calibrate_from_file()

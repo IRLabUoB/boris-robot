@@ -1,8 +1,8 @@
 <launch>
 
   <arg name="camera" default="external_camera" />
-  <!-- <arg name="rgb_frame_id"   default="$(arg camera)_rgb_optical_frame" />
-  <arg name="depth_frame_id" default="$(arg camera)_depth_optical_frame" /> -->
+  <!-- <arg name="rgb_frame_id"   default="$(arg camera)_camera_rgb_optical_frame" />
+  <arg name="depth_frame_id" default="$(arg camera)_camera_depth_optical_frame" /> -->
   <arg name="device_id" default="#3" />
 
 
@@ -14,8 +14,8 @@
    <arg name="auto_white_balance" value="false" />
    <arg name="color_depth_synchronization" value="true" />
    <arg name="camera" value="$(arg camera)" />
-   <!-- <arg name="rgb_frame_id" value="$(arg rgb_frame_id)" />
-   <arg name="depth_frame_id" value="$(arg depth_frame_id)" /> -->
+   <arg name="rgb_frame_id" value="$(arg camera)_camera_rgb_optical_frame" />
+   <arg name="depth_frame_id" value="$(arg camera)_camera_depth_optical_frame" />
    <arg name="device_id" value="$(arg device_id)" />
    <arg name="rgb_camera_info_url"
         value="file://$(find boris_tools)/calib_data/right_rgb_PS1080_PrimeSense.yaml" />
