@@ -13,47 +13,32 @@ NODE_NAME = 'boris_external_eye_calibrator'
 class ExternalEyeCalibrator(object):
     def __init__(self):
     
-        self._camera_frame = rospy.get_param('%s/camera_frame'%(NODE_NAME,),'camera_rgb_optical_frame')
-        self._marker_frame = rospy.get_param('%s/marker_frame'%(NODE_NAME,),'marker26')
+        self._camera_frame = rospy.get_param('%s/camera_frame'%(NODE_NAME,),'external_camera_link')
+        self._marker_frame_ext = rospy.get_param('%s/marker_frame_ext'%(NODE_NAME,),'marker26')
+        self._marker_frame_eye = rospy.get_param('%s/marker_frame_eye'%(NODE_NAME,),'marker26b')
         self._robot_base_frame = rospy.get_param('%s/robot_base_frame'%(NODE_NAME,),'world')
-        self._ee_frame = rospy.get_param('%s/ee_frame'%(NODE_NAME,),'left_arm_7_link')
+    
 
         self._save_calib_file = rospy.get_param('%s/save_calib_file'%(NODE_NAME,),'external_eye_calib_data.npy')
         self._load_calib_file = rospy.get_param('%s/load_calib_file'%(NODE_NAME,),'external_eye_calib_data.npy')
-        self._calib_from_file = rospy.get_param('%s/calibrate_from_file'%(NODE_NAME,),True)
+        self._calib_from_file = rospy.get_param('%s/calibrate_from_file'%(NODE_NAME,),False)
 
         rospy.loginfo("Camera frame: %s"%(self._camera_frame,))
-        rospy.loginfo("Marker frame: %s"%(self._marker_frame,))
+        rospy.loginfo("Marker frame eye in hand: %s"%(self._marker_frame_eye,))
+        rospy.loginfo("Marker frame external camera: %s"%(self._marker_frame_ext,))
         rospy.loginfo("Robot frame: %s"%(self._robot_base_frame,))
-        rospy.loginfo("End-effector frame: %s"%(self._ee_frame,))
         rospy.loginfo("Calibration filename to save: %s"%(self._save_calib_file,))
         rospy.loginfo("Calibration filename to load: %s"%(self._load_calib_file,))
         rospy.loginfo("Calibrate from file: %s"%(self._calib_from_file,))
 
-        self._camera_base_p = [0.000, 0.022, 0.0]
-        self._camera_base_q = [-0.500, 0.500, -0.500, 0.500]
-
-        self._camera_base_transform = self.to_transform_matrix(self._camera_base_p, self._camera_base_q)
-
-
         self._br = tf.TransformBroadcaster()
         self._tf = TransformListener()
 
-    def broadcast_frame(self, pt, rot, frame_name="marker"):
-
-        rot = np.append(rot, [[0, 0, 0]], 0)
-        rot = np.append(rot, [[0], [0], [0], [1]], 1)
-        quat = tuple(tf.transformations.quaternion_from_matrix(rot))
-        now = rospy.Time.now()
-        self._br.sendTransform((pt[0], pt[1], pt[2]), tf.transformations.quaternion_from_matrix(rot), now, frame_name,
-                              'base')
-        print("should have done it!")
-
-    def broadcast_frame2(self, p, q, frame_name="marker"):
+    def broadcast_frame(self, p, q, frame_name="marker"):
 
         now = rospy.Time.now()
         self._br.sendTransform(p, q, now, frame_name,
-                              'world')
+                              self._robot_base_frame)
         # print("should have done it!")
 
 
@@ -115,16 +100,16 @@ class ExternalEyeCalibrator(object):
 
     def calibrate_from_file(self):
 
-        calib_data = np.load('external_eye_calibration.npy').item()
+        calib_data = np.load(self._load_calib_file).item()
 
         transform_dict = calib_data['external_eye_transform']
         p = transform_dict['p']
         q = transform_dict['q']
 
-        r = rospy.Rate(100)
+        r = rospy.Rate(30)
         while not rospy.is_shutdown():
 
-            self.broadcast_frame2(p,q, "external_camera_link")
+            self.broadcast_frame(p,q, self._camera_frame)
 
             r.sleep()
 
@@ -133,12 +118,13 @@ class ExternalEyeCalibrator(object):
     def calibrate(self):
 
         r = rospy.Rate(10)
-        p = None
-        q = None
+        p = np.zeros(3)
+        q = np.zeros(4)
+        q[3] = 1.0
         while not rospy.is_shutdown():
         
-            marker_t, marker_q, _ = self.get_transform("world", "marker26_2")
-            camera_t, camera_q, _ = self.get_transform("marker26", "external_camera_link")
+            marker_t, marker_q, _ = self.get_transform(self._robot_base_frame, self._marker_frame_eye)
+            camera_t, camera_q, _ = self.get_transform(self._marker_frame_ext, self._camera_frame)
 
             # print("Marker pose: ", marker_t, marker_q)
             # print("Camera pose: ", camera_t, camera_q)
@@ -148,10 +134,14 @@ class ExternalEyeCalibrator(object):
             
             external_eye_transform = np.matmul(marker_transform,camera_transform)
 
-            p, q = self.to_position_quaternion(external_eye_transform)
+            pt, qt = self.to_position_quaternion(external_eye_transform)
+            p = p*0.8 + pt*0.2
+            q = qt*0.8 + qt*0.2
+            q /= np.linalg.norm(q)
+            external_eye_transform = self.to_transform_matrix(p,q)
             rpy = self.to_euler(external_eye_transform)
             # print(p, q)
-            self.broadcast_frame2(p,q, "external_camera_link")
+            self.broadcast_frame(p,q, self._camera_frame)
 
 
 
@@ -161,7 +151,8 @@ class ExternalEyeCalibrator(object):
 
 
         calib_data = {'external_eye_transform':  {'p' : p, 'q' : q, 'rpy': rpy}}
-        np.save('external_eye_calibration.npy', calib_data)
+        np.save(self._save_calib_file, calib_data)
+        rospy.loginfo("Saved calib data to: %s"%(self._save_calib_file,))
         #         camera_transform = self.to_transform_matrix(camera_t,camera_q)
         #         ee_transform = self.to_transform_matrix(ee_t, ee_q)
         # hand_eye_transform = np.matmul(hand_eye_transform,np.linalg.inv(self._camera_base_transform))

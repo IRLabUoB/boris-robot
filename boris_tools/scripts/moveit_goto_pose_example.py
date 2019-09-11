@@ -38,14 +38,20 @@ def main():
     arm_initial_pose = arm.get_current_pose().pose
     arm_initial_joints = arm.get_current_joint_values()
 
-    position = [0.385541808244, 0.761554216122, 0.340677951568]
-    orientation = [0.795882436029, 0.281121458954 , 0.309208527698, 0.438100399149]
+    position = [0.752, 0.630, -0.10]#[0.385541808244, 0.761554216122, 0.340677951568]
+    orientation = [0.120, 0.708, -0.102, 0.689]
+#[0.795882436029, 0.281121458954 , 0.309208527698, 0.438100399149]
+    # [0.823, 0.640, 0.274]
+    #[0.600, -0.395, 0.671, -0.183]
+
+    ## palm down: [0.120, 0.708, -0.102, 0.689]
 
     ee_target = geometry_msgs.msg.Pose()
     ee_target.position.x = position[0]
     ee_target.position.y = position[1]
     ee_target.position.z = position[2]
 
+    # ee_target.orientation = #arm_initial_pose.orientation
     ee_target.orientation.x = orientation[0]
     ee_target.orientation.y = orientation[1]
     ee_target.orientation.z = orientation[2]
@@ -58,11 +64,11 @@ def main():
     arm.clear_pose_targets()
 
 
-    print "Going back"
-    arm.set_pose_target(arm_initial_pose)
-    arm.go(wait=True)
-    arm.stop()
-    arm.clear_pose_targets()
+    # print "Going back"
+    # arm.set_pose_target(arm_initial_pose)
+    # arm.go(wait=True)
+    # arm.stop()
+    # arm.clear_pose_targets()
     
 
     moveit_commander.roscpp_shutdown()

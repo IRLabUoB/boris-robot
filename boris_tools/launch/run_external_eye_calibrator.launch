@@ -1,25 +1,24 @@
 <launch>
-
-    <arg name="side"              default="external"/>
-    <arg name="camera_frame"      default="camera_rgb_optical_frame"/>
-    <arg name="marker_frame"      default="marker26"/>    <!-- in m -->
+    <arg name="camera_frame"      default="external_camera_link"/>
+    <arg name="marker_frame_ext"      default="marker26"/>   
+    <arg name="marker_frame_eye"      default="marker26b"/>   
     <arg name="robot_base_frame"  default="world"/>
 
     <!-- File will be loaded if calibrate_from_file is true-->
-    <arg name="load_calib_file"    default="$(find boris_tools)/calib_data/hand_eye_calibration_left_fixed.npy"/> 
+    <arg name="load_calib_file"    default="$(find boris_tools)/calib_data/external_eye_calibration.npy"/> 
     <arg name="calibrate_from_file"    default="true"/>
     
-    <arg name="save_calib_file"    default="hand_eye_calib_data.npy"/>
+    <arg name="save_calib_file"    default="external_eye_calibration.npy"/>
     
 
     <node pkg="boris_tools" type="external_eye_calibrator.py" name="boris_external_eye_calibrator" output="screen">
         <param name="calibrate_from_file" value="$(arg calibrate_from_file)"/>
         <param name="load_calib_file" value="$(arg load_calib_file)"/>
         <param name="save_calib_file" value="$(arg save_calib_file)"/>
-        <param name="camera_frame"      value="$(arg side)_$(arg camera_frame)"/>
-        <param name="marker_frame"      value="$(arg marker_frame)"/>
+        <param name="camera_frame"      value="external_camera_link"/>
+        <param name="marker_frame_ext"      value="$(arg marker_frame_ext)"/>
+        <param name="marker_frame_eye"      value="$(arg marker_frame_eye)"/>
         <param name="robot_base_frame"  value="$(arg robot_base_frame)"/>
-        <param name="ee_frame"          value="$(arg side)_arm_7_link"/>   <!-- frame in which the marker pose will be refered -->
     </node>
 
 </launch>
