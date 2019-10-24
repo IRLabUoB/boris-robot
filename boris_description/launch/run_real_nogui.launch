@@ -19,6 +19,6 @@
     <arg name="right_hand_enabled" default="false"/>
  </include>
 
- <node name="joint_trajectory_action_server" pkg="boris_tools" type="joint_trajectory_action_server.py" respawn="false" output="screen"/>
+ <!-- <node name="joint_trajectory_action_server" pkg="boris_tools" type="joint_trajectory_action_server.py" respawn="false" output="screen"/> -->
 
 </launch>
